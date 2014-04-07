@@ -1,7 +1,7 @@
 cldstk-deploy
 =============
 
-CloudStack Deploy is a simple utility for making Apache CloudStack environment installations quick, easy and painless.
+CloudStack Deploy is a utility for making Apache CloudStack environment installations quick, easy and painless.
 
 ## Requirements
 
