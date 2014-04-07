@@ -31,7 +31,7 @@ Next all you have to do is answer the preseeding questions. Example shown below.
     
 After you enter your password it's off to the races. If everything goes as planned you'll have all your Apache CloudStack components up and running in no time.
 
-#### Web UI
+#### Web UI:
 
 From the root directory type:
 
