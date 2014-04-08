@@ -1,0 +1,30 @@
+---
+# ssh-copy-id root@hostname
+
+# cloudstack-mgmt_deploy.yaml
+# complete installation of cloudstack-management server
+
+- hosts: cldstk_mgmt_master
+  vars_files:
+    - vars_file.yml
+
+
+  tasks:
+	- name: Ensure secondary storage mount exists
+	  file: path=/mnt/secondary state=directory
+
+    - name: Cleanup directory
+      shell: rm -rf /mnt/secondary/*
+
+	- name: Ensure  NFS storage is mounted
+	  mount: name=/mnt/secondary src={{ nfs_server }}:{{ nfs_path }} fstype=nfs state=mounted opts=nolock
+
+
+	- name: Seed secondary storage
+	  command: /usr/share/cloudstack-common/scripts/storage/secondary/cloud-install-sys-tmplt -m /mnt/secondary -u http://download.cloud.com/templates/4.3/systemvm64template-2014-01-14-master-kvm.qcow2.bz2 -h kvm -F
+
+	#   command:
+	# /usr/share/cloudstack-common/scripts/storage/secondary/cloud-install-sys-tmplt -m /mnt/secondary -u http://download.cloud.com/templates/4.3/systemvm64template-2014-01-14-master-xen.vhd.bz2 -h xenserver -F
+
+	#   command:
+	# /usr/share/cloudstack-common/scripts/storage/secondary/cloud-install-sys-tmplt -m /mnt/secondary -u http://download.cloud.com/templates/4.3/systemvm64template-2014-01-14-master-vmware.ova -h vmware -F

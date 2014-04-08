@@ -1,0 +1,36 @@
+extends layout
+
+block content
+
+  .menu
+    ul.nav.nav-pills
+      li
+        a(href='/') Home
+      li.active
+        a(href='/autodeploy') Get-Started
+  hr
+  h3 CloudStack Auto Deploy
+  p Enter the information below then click "Submit" to get your Apache CloudStack environment installed.
+  p
+  h4 Database Server  
+  form(id="deployform", action="/autodeploy/start", method="post")
+    input(type="text", name="db_master", placeholder="MySQL Master", style="font-size:16pt" )
+    p 
+    input(type="text", name="db_slave", placeholder="MySQL Replica", style="font-size:16pt" )
+    p
+    h4 Management Servers
+    p
+      input(type="text", , name="web_hosts", placeholder="Management Servers (comma delimited)", size="40", style="font-size:16pt" )
+    p
+    h4 KVM Hosts
+    p
+      input(type="text", , name="kvm_hosts", placeholder="KVM Host Servers  (comma delimited)", size="40", style="font-size:16pt"  )
+    p
+    h4 NFS Server
+    p
+      input(type="text", name="nfs_server", placeholder="NFS Server", style="font-size:16pt" )
+    p
+      input(type="text", name="nfs_path", placeholder="NFS Path", style="font-size:16pt" )
+    p
+    p
+      input(type="submit", value="Submit", id="deploysubmit", style="font-size:16pt" )

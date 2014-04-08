@@ -1,0 +1,117 @@
+---
+# ssh-copy-id root@hostname
+
+# cloudstack-mgmt_deploy.yaml
+# complete installation of cloudstack-management server
+- hosts: cldstk_web
+  user: root
+
+  tasks:
+    - name: Stop cloudstack-management service
+      action: service name=cloudstack-management state=stopped
+
+- hosts: db_slave
+  user: root
+  vars_files:
+    - vars_file.yml
+
+  tasks:
+    - name: Update my.cnf for replication slave
+      copy: src=my.cnf2.j2 dest=/etc/my.cnf
+      when: slave != None
+
+    - name: Start the MySQL service
+      action: service name=mysqld state=restarted
+      when: slave != None
+
+    - name: Stop iptables
+      action: service name=iptables state=stopped
+      when: slave != None
+
+- hosts: db_master
+  user: root
+  vars_files:
+    - vars_file.yml
+
+  tasks:
+    - name: Stop iptables
+      action: service name=iptables state=stopped
+      when: slave != None
+      
+    - name: Update my.cnf for replication master
+      copy: src=my.cnf1.j2 dest=/etc/my.cnf
+      when: slave != None
+
+    - name: Start the MySQL service
+      action: service name=mysqld state=restarted
+      when: slave != None
+
+    - name: Create and grant cloud-repl user permissions
+      command: mysql -uroot -p{{ mysql_root_password }} -e "grant replication slave on *.* to 'cloud-repl'@'%' identified by '{{ cloud_repl_password }}';"
+      when: slave != None
+
+    - name: flush privileges
+      command: mysql -uroot -p{{ mysql_root_password }} -e "flush privileges;"
+      when: slave != None
+
+    - name: flush tables
+      command: mysql -uroot -p{{ mysql_root_password }} -e "flush tables with read lock;"
+      when: slave != None
+
+    - name: unlock tables
+      command: mysql -uroot -p{{ mysql_root_password }} -e "unlock tables;"
+      when: slave != None
+
+    - name: Backup Master DB
+      shell: mysqldump -u root -p{{ mysql_root_password }} --all-databases > /tmp/dbdump.db
+      when: slave != None
+
+    - name: Restore Backup to Slave
+      shell: mysql -uroot -p{{ mysql_root_password }} -h {{ slave }} < /tmp/dbdump.db
+      when: slave != None
+      ignore_errors: yes
+
+- hosts: db_slave
+  user: root
+  vars_files:
+    - vars_file.yml
+
+  tasks:
+    - name: Start the MySQL service
+      action: service name=mysqld state=restarted
+      when: slave != None
+
+- hosts: db_master
+  user: root
+  vars_files:
+    - vars_file.yml
+
+  tasks:
+    - name: Stop slave
+      command: mysql -uroot -p{{ mysql_root_password }} -h {{ slave }} -e "stop slave;"
+      when: slave != None
+      ignore_errors: yes
+
+    - name: show master status
+      command: mysql -uroot -p{{ mysql_root_password }} -e "show master status;"
+      when: slave != None
+      register: mysql
+    - debug: var=mysql.stdout_lines
+
+    - name: Configure replication slave master in MySQL
+      command: mysql -uroot -p{{ mysql_root_password }} -h {{ slave }} -e "change master to master_host='{{ master }}', master_user='cloud-repl', master_password='password', master_log_file='{{ mysql.stdout_lines[1].split('\t')[0] }}',master_log_pos={{mysql.stdout_lines[1].split('\t')[1]}};"
+      when: slave != None
+
+    - name: Start MySQL slave
+      command: mysql -uroot -p{{ mysql_root_password }} -h {{ slave }} -e "start slave;"
+      when: slave != None
+
+
+- hosts: cldstk_web
+  user: root
+
+  tasks:
+    - name: Start cloudstack-management service
+      action: service name=cloudstack-management state=started
+
+

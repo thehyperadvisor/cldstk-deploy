@@ -1,0 +1,69 @@
+extends layout
+
+block content
+
+  .menu
+    ul.nav.nav-pills
+      li.active
+        a(href='/') Home
+      li
+        a(href='/autodeploy') Get-Started
+  hr
+  h3 Introduction
+    
+  p CloudStack Auto Deploy is a simple utility for making Apache CloudStack environment installations quick and painless.
+  h3 Requirements
+
+  ul
+    li CentOS 6.4 or .6.5 minimal installation
+    li Host resolution must be working for the systems that runs this process
+    li Systems must have internet connectivity
+
+  h3 Instructions
+  br
+  h4 Web UI:
+  
+  p From the root directory type:
+  <pre>
+  p python start.py -s
+  </pre> 
+  p This will start the web server so that you can use the web interface.
+  br
+  h4 Commandline:
+  
+  <pre>
+  p python start.py
+  </pre> 
+  p This will start asking questions from the command prompt.
+
+  p Next all you have to do is answer the preseeding questions. Example shown below.
+
+  <pre>
+  p Install MySQL?[Y/n]: y
+  p Db Server[dns/ip]: cldstkdbsrv01
+  p Install MySQL Replica?[Y/n]: y
+  p Db Replica Server[dns/ip]: cldstkdbsrv02
+  p Install Management Servers?[Y/n]: y
+  p Comma separated list: cldstkwebsrv01,cldstkwebsrv02 
+  p Install KVM Hosts?[Y/n]: y
+  p Comma separated list: cldstkkvm01,cldstkkvm02
+  p SSH password:
+  </pre>
+  p After you enter your password it's off to the races. If everything goes as planned you'll have all your Apache CloudStack components up and running in no time.
+
+  h3 Options
+
+  p 
+   ul 
+    li You can choose whether or not to install MySQL. If you choose not to install MySQL, you must provide the current MySQL server name or ip address.
+    li You can choose whether or not to install MySQL replication partner. 
+    li You can choose whether or not to install Apache CloudStack Management servers.
+    li You can choose whether or not to install KVM hsots with CloudStack Agent.
+
+  
+
+
+  include foot
+
+
+

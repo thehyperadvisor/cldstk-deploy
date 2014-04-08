@@ -1,0 +1,21 @@
+# Mysql replication master node configuration file
+[mysqld]
+datadir=/var/lib/mysql
+socket=/var/lib/mysql/mysql.sock
+user=mysql
+# Disabling symbolic-links is recommended to prevent assorted security risks
+symbolic-links=0
+default-time-zone='+00:00'
+innodb_rollback_on_timeout=1
+innodb_lock_wait_timeout=600
+max_connections=350
+log-bin=mysql-bin
+binlog-format = 'ROW'
+server-id=1
+binlog_do_db= cloud
+binlog_do_db= cloud_usage
+binlog_do_db= cloudbridge
+
+[mysqld_safe]
+log-error=/var/log/mysqld.log
+pid-file=/var/run/mysqld/mysqld.pid

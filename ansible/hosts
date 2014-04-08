@@ -1,0 +1,17 @@
+[localhost]
+127.0.0.1
+
+[db_master]
+cldstkdbsrv01
+
+[mysql_servers]
+cldstkdbsrv01
+
+[cldstk_web]
+cldstkwebsrv01
+
+[cldstk_mgmt_master]
+cldstkwebsrv01
+
+[cldstk_kvm]
+cldstkkvm01

@@ -1,0 +1,8 @@
+master: cldstkdbsrv01
+slave: 
+cloud_repl_password: password
+mysql_root_password: PaSSw0rd1234
+nfs_server: 
+nfs_path: 
+repotype: local
+repoversion: 4.3

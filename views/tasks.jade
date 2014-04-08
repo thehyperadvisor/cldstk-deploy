@@ -1,0 +1,60 @@
+extends layout
+
+block content
+
+  .menu
+    ul.nav.nav-pills
+      li
+        a(href='/') Home
+      li.active
+        a(href='/tasks') Todo List
+
+  p Welcome to #{title}
+  div.loginbox
+    form(name="login", action="/login", method="post")
+    table
+      tr
+        td
+          input(type="text", name="db_master", placeholder="MySQL Master")
+        td
+          input(type="text", name="db_slave", placeholder="MySQL Replica")
+    p
+    p
+      input(type="text", , name="mgmt_server", placeholder="Management Server")
+    p
+    p
+      input(type="submit", value="login")
+
+  .list
+  .item.add-task
+    div.action
+      form(action='/tasks', method='post')
+        input(type='hidden', value='true', name='all_done')
+        input(type='hidden', value=locals._csrf, name='_csrf')
+        input(type='submit', class='btn btn-success btn-xs', value='all done')
+    form(action="/tasks", method='post')
+      input(type='hidden', value=locals._csrf, name='_csrf')
+      div.name
+        input(type="text", name="name", placeholder='Add a new task')
+      div.delete
+        input.btn.btn-primary.btn-sm(type="submit", value='add')
+  if (tasks.length === 0)
+    | No tasks.
+  each task, index in tasks
+    .item
+      div.action
+        form(action='/tasks/#{task._id}', method='post')
+          input(type='hidden', value=task._id.toString(), name='id')
+          input(type='hidden', value='true', name='completed')
+          input(type='hidden', value=locals._csrf, name='_csrf')
+          input(type='submit', class='btn btn-success btn-xs task-done', value='done')
+      div.num
+        span=index+1
+          |.&nbsp;
+      div.name
+        span.name=task.name
+        //- no support for DELETE method in forms
+        //- http://amundsen.com/examples/put-delete-forms/
+        //- so do XHR request instead from public/javascripts/main.js
+      div.delete
+        a(class='btn btn-danger btn-xs task-delete', data-task-id=task._id.toString(), data-csrf=locals._csrf) delete
