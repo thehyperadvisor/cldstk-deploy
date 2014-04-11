@@ -4,10 +4,24 @@ import sys, os
 
 cloud_repl_password = 'password'
 mysql_root_password = 'PaSSw0rd1234'
+savedHome = os.getcwd()
 
-def packagedownload(repo):
+
+def getRPMS(repo):
         # Download rpm packages from remote repository
-        call(["wget","--no-parent", "-r", "--reject", "index.html*", "http://cloudstack.apt-get.eu/rhel/4.3/"], shell=False)
+        os.chdir('public')
+        call(["wget","--no-parent", "-r", "--reject", "index.html*", "http://cloudstack.apt-get.eu/rhel/%s/" % repo], shell=False)
+
+def getSystemtemplate(repo):
+        # Download rpm packages from remote repository
+        if repo == '4.3':
+                os.chdir('public/template/4.3/')
+                call(["wget","http://download.cloud.com/templates/4.3/systemvm64template-2014-01-14-master-kvm.qcow2.bz2"], shell=False)
+                #call(["wget","http://download.cloud.com/templates/4.3/systemvm64template-2014-01-14-master-xen.vhd.bz2"], shell=False)
+                #call(["wget","http://download.cloud.com/templates/4.3/systemvm64template-2014-01-14-master-vmware.ova"], shell=False)
+        if repo == '4.2':
+                os.chdir('public/template/4.2/')
+                call(["wget","http://download.cloud.com/templates/4.2/systemvmtemplate-2013-06-12-master-kvm.qcow2.bz2"], shell=False)
 
 def startnode():
         # Check if webserver is already running. If so, kill and restart new process
@@ -166,9 +180,6 @@ def main():
                 print('You must provide the Master Database Server...')
                 main()
 
-
-
-
 if __name__ == '__main__':
         if len(sys.argv) == 2 and sys.argv[1] == '-s':
                 startnode()
@@ -180,6 +191,13 @@ if __name__ == '__main__':
         elif len(sys.argv) == 2 and sys.argv[1] == '-S':
                 stopnode()
                 sys.exit()
+        elif len(sys.argv) > 2 and sys.argv[1] == 'get':
+                if sys.argv[2].split('=')[0] == 'rpmversion' and len(sys.argv[2].split('=')[1]) != 0:
+                        getRPMS('%s' % sys.argv[2].split('=')[1])
+                elif sys.argv[2].split('=')[0] == 'systemtemplate' and len(sys.argv[2].split('=')[1]) != 0:
+                        getSystemtemplate('%s' % sys.argv[2].split('=')[1])
+                else:
+                        print('Wrong Syntax.....')
         elif len(sys.argv) == 2 and sys.argv[1] == '-i':
                 startnode()
                 print('')

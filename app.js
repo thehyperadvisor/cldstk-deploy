@@ -27,8 +27,8 @@ app.use(express.session({secret: '59B93087-78BC-4EB9-993A-A61FC844F6C9'}));
 
 app.use(app.router);
 app.use('/', express.static(__dirname + '/public'));
-app.use('/acs/rpms/', express.static(__dirname + '/public/acs/rpms/'));
-app.use('/acs/rpms/', express.directory(__dirname + '/public/acs/rpms/'));
+app.use('/acs/rpms/', express.static(__dirname + '/public/cloudstack.apt-get.eu/rhel/'));
+app.use('/acs/rpms/', express.directory(__dirname + '/public/cloudstack.apt-get.eu/rhel/'));
 
 // development only
 if ('development' == app.get('env')) {
