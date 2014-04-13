@@ -1,0 +1,24 @@
+---
+# ssh-copy-id root@hostname
+
+# cloudstack-mgmt_deploy.yaml
+# complete installation of cloudstack-management server
+
+- hosts: cldstk_mgmt
+  vars_files:
+    - ../vars_file.yml
+
+
+  tasks:
+    - name: Ensure secondary storage mount exists
+      file: path=/mnt/secondary state=directory
+      when: nfs_server != None
+
+    - name: Ensure  NFS storage is mounted
+      mount: name=/mnt/secondary src={{ nfs_server }}:{{ nfs_path }} fstype=nfs state=mounted opts=nolock
+      when: nfs_server != None
+
+    - name: Seed secondary storage
+      command: /usr/share/cloudstack-common/scripts/storage/secondary/cloud-install-sys-tmplt -m /mnt/secondary -u {{ systemtemplate }}
+      when: nfs_server != None
+

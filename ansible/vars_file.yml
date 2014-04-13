@@ -1,8 +1,10 @@
+mgmt_primary: cldstkwebsrv01
 master: cldstkdbsrv01
-slave: 
+slave: cldstkdbsrv02
 cloud_repl_password: password
 mysql_root_password: PaSSw0rd1234
-nfs_server: 
-nfs_path: 
-repotype: local
+nfs_server: 192.168.78.148
+nfs_path: /mnt/volume1/secondary
+repotype: Local
 repoversion: 4.3
+systemtemplate: 

@@ -1,0 +1,76 @@
+---
+    - name: Stop iptables
+      action: service name=iptables state=stopped
+
+    - name: Clean yum repositories
+      command: yum clean all
+
+    - name: Install Dependancies
+      action: yum name={{ item }} state=installed
+      with_items:
+        - libselinux-python
+        - ntp
+
+    - name: Set SELinux to permissive
+      action: selinux policy=targeted state=permissive
+
+    - name: Install NTP
+      action: service name=ntpd state=started
+
+    - name: Remove mysql-server
+      yum: pkg=mysql-server state=removed
+
+    - name: Delete mysql db files
+      command: rm -rf /var/lib/mysql/
+
+    - name: Update my.cnf
+      copy: src=my.cnf.j2 dest=/etc/my.cnf
+
+    - name: Install MySQL
+      action: yum name={{ item }}
+      with_items:
+        - MySQL-python
+        - mysql
+        - mysql-server
+
+    - name: Start the MySQL service
+      action: service name=mysqld state=started
+
+    - name: Set mysql to start at boot time
+      action: command chkconfig mysqld on
+
+    - name: Update mysql root password for all root accounts
+      mysql_user: login_user=root 
+                  login_password= 
+                  name=root 
+                  host={{ item }} 
+                  password={{ mysql_root_password }}
+                  priv=*.*:ALL,GRANT
+      with_items:
+        - $ansible_hostname
+        - 127.0.0.1
+        - ::1
+        - '%'
+        - localhost
+
+    - name: Update mysql root password for all root accounts
+      mysql_user: login_user=root 
+                  login_password={{ mysql_root_password }}
+                  name=root 
+                  host={{ hostvars[item]['ansible_fqdn'] }}
+                  password={{ mysql_root_password }}
+                  priv=*.*:ALL,GRANT
+      with_items: ${groups.mysql_servers}
+
+    - name: delete anonymous MySQL server user for $server_hostname
+      action: mysql_user login_user=root login_password={{ mysql_root_password }} user="" host="$server_hostname" state="absent"
+
+    - name: delete anonymous MySQL server user for $ansible_fqdn
+      action: mysql_user login_user=root login_password={{ mysql_root_password }} user="" host="{{ ansible_fqdn }}" state="absent"
+
+    - name: delete anonymous MySQL server user for localhost
+      action: mysql_user login_user=root login_password={{ mysql_root_password }} user="" state="absent"
+
+    - name: remove the MySQL test database
+      action: mysql_db login_user=root login_password={{ mysql_root_password }} db=test state=absent
+

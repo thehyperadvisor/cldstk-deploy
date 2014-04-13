@@ -22,13 +22,15 @@ app.use(express.json());
 app.use(express.urlencoded());
 app.use(express.methodOverride());
 app.use(express.cookieParser());
-app.use(express.session({secret: '59B93087-78BC-4EB9-993A-A61FC844F6C9'}));
+app.use(express.session({secret: '85A93087-78BC-4EB9-993A-A61FD144F6C9'}));
 
 
 app.use(app.router);
 app.use('/', express.static(__dirname + '/public'));
 app.use('/acs/rpms/', express.static(__dirname + '/public/cloudstack.apt-get.eu/rhel/'));
 app.use('/acs/rpms/', express.directory(__dirname + '/public/cloudstack.apt-get.eu/rhel/'));
+app.use('/acs/templates/', express.static(__dirname + '/public/templates/'));
+app.use('/acs/templates/', express.directory(__dirname + '/public/templates/'));
 
 // development only
 if ('development' == app.get('env')) {

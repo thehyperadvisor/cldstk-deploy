@@ -12,6 +12,8 @@ exports.start = function(req, res){
         web_hosts = req.body.web_hosts,
         nfs_server = req.body.nfs_server.toString().replace(',',''),
         nfs_path = req.body.nfs_path.toString().replace(',','')
+        repo_type = req.body.repo_type.toString().replace(',','')
+        repo_version = req.body.repo_version.toString().replace(',','')
 
     var cldstk_kvm = "";
 
@@ -22,9 +24,11 @@ exports.start = function(req, res){
     //console.log(cldstk_kvm);
 
     var cldstk_web = "";
+    var cldstk_mgmt = "";
+
+    cldstk_mgmt = web_hosts.split(",")[0];
 
     for (var i in web_hosts.split(",")) {
-    	cldstk_mgmt = web_hosts.split(",")[0];
     	cldstk_web = cldstk_web + web_hosts.split(",")[i] + "\n";
     };
     //console.log(cldstk_web);
@@ -50,7 +54,9 @@ exports.start = function(req, res){
     				"cloud_repl_password: password" + "\n" +
     				"mysql_root_password: PaSSw0rd1234" + "\n" +
                     "nfs_server: " + nfs_server + "\n" +
-                    "nfs_path: " + nfs_path + "\n";
+                    "nfs_path: " + nfs_path + "\n" + 
+                    "repotype: " + repo_type + "\n" + 
+                    "repoversion: " + repo_version + "\n";
 
 
     fs.writeFile("./ansible/vars_file.yml", varsfile, function(err) {

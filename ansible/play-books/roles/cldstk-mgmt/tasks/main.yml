@@ -1,0 +1,35 @@
+---
+- name: Stop iptables
+  action: service name=iptables state=stopped
+
+- name: Clean yum repositories
+  command: yum clean all
+
+- name: Install Dependancies
+  action: yum name={{ item }}
+  with_items:
+    - libselinux-python
+    - ntp
+    - mysql
+
+- name: Set SELinux to Permissive
+  action: selinux policy=targeted state=permissive
+
+- name: Start service NTP
+  action: service name=ntpd state=started
+
+- name: Downloading and enable the EPEL repository definitions.
+  action: command rpm -Uvh --replacepkgs http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
+  when: ansible_distribution == 'CentOS'
+  # and ansible_lsb.major_release|int == 6
+
+- name: Add Cloudstack Repository
+  copy: src="../resources/cloudstack.repo" dest=/etc/yum.repos.d/cloudstack.repo
+
+- name: Install Cloudstack Management RPMS
+  action: yum name={{ item }}
+  with_items:
+    - cloudstack-management
+    - cloudstack-usage
+    - cloudstack-awsapi
+    - cloudstack-common

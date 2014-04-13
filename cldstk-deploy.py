@@ -1,27 +1,42 @@
 #! /usr/bin/env python
 from subprocess import call,Popen, PIPE
-import sys, os
+import sys, os, shutil
 
 cloud_repl_password = 'password'
 mysql_root_password = 'PaSSw0rd1234'
 savedHome = os.getcwd()
 
 
+def setUp():
+        call(["rpm","-Uvh", "http://mirror.pnl.gov/epel/6/x86_64/epel-release-6-8.noarch.rpm"], shell=False)
+        call(["yum","install", "python-setuptools", "-y"], shell=False)
+        call(["yum","install", "ansible", "-y"], shell=False)
+        call(["yum","install", "nodejs", "-y"], shell=False)
+        call(["yum","install", "npm", "-y"], shell=False)
+        call(["npm","update"], shell=False)
+        call(["npm","install", "forever", "-g"], shell=False)
+        call(["service","iptables", "stop"], shell=False)
+        call(["chkconfig","iptables", "off"], shell=False)
+
 def getRPMS(repo):
         # Download rpm packages from remote repository
-        os.chdir('public')
+        os.chdir(savedHome + '/public')
         call(["wget","--no-parent", "-r", "--reject", "index.html*", "http://cloudstack.apt-get.eu/rhel/%s/" % repo], shell=False)
+        os.chdir(savedHome)
 
 def getSystemtemplate(repo):
         # Download rpm packages from remote repository
         if repo == '4.3':
-                os.chdir('public/template/4.3/')
+                os.chdir(savedHome + '/public/templates/4.3/')
                 call(["wget","http://download.cloud.com/templates/4.3/systemvm64template-2014-01-14-master-kvm.qcow2.bz2"], shell=False)
                 #call(["wget","http://download.cloud.com/templates/4.3/systemvm64template-2014-01-14-master-xen.vhd.bz2"], shell=False)
                 #call(["wget","http://download.cloud.com/templates/4.3/systemvm64template-2014-01-14-master-vmware.ova"], shell=False)
+                os.chdir(savedHome)
         if repo == '4.2':
+                os.chdir(savedHome + '/public/templates/4.2/')
                 os.chdir('public/template/4.2/')
                 call(["wget","http://download.cloud.com/templates/4.2/systemvmtemplate-2013-06-12-master-kvm.qcow2.bz2"], shell=False)
+                os.chdir(savedHome)
 
 def startnode():
         # Check if webserver is already running. If so, kill and restart new process
@@ -63,7 +78,7 @@ def stopnode():
 
 def startall():
         # ansible-playbook -i ./ansible/hosts ./ansible/run-all.yml -k
-        start_now = Popen(['ansible-playbook', '-i', './ansible/hosts', './ansible/run-all.yml', '-k'], stderr=PIPE)
+        start_now = Popen(['ansible-playbook', '-i', './ansible/hosts', './ansible/play-books/run-all.yml', '-k'], stderr=PIPE)
         errdata = start_now.communicate()[1]
         if len(errdata) != 0:
                 print errdata.strip("\n")
@@ -148,7 +163,7 @@ def main():
 
                 # Write the vars_file.yml file
                 if len(db_master) != 0:
-                        vars_file = open('./ansible/vars_file.yml','w')
+                        vars_file = open('./ansible/resources/vars_file.yml','w')
                         vars_file.write('master: %s\n' % db_master)
                         vars_file.write('slave: %s\n' % db_slave)
                         vars_file.write('cloud_repl_password: %s\n' % cloud_repl_password)
@@ -157,7 +172,7 @@ def main():
                         vars_file.write('nfs_path: %s\n' % nfs_path)
                         vars_file.close()
                 else:
-                        vars_file = open('./ansible/vars_file.yml','w')
+                        vars_file = open('./ansible/resources/vars_file.yml','w')
                         vars_file.write('master: %s\n' % mgmt_master)
                         vars_file.write('slave: %s\n' % db_slave)
                         vars_file.write('cloud_repl_password: %s\n' % cloud_repl_password)
@@ -194,6 +209,13 @@ if __name__ == '__main__':
         elif len(sys.argv) > 2 and sys.argv[1] == 'get':
                 if sys.argv[2].split('=')[0] == 'rpmversion' and len(sys.argv[2].split('=')[1]) != 0:
                         getRPMS('%s' % sys.argv[2].split('=')[1])
+                elif sys.argv[2].split('=')[0] == 'systemtemplate' and len(sys.argv[2].split('=')[1]) != 0:
+                        getSystemtemplate('%s' % sys.argv[2].split('=')[1])
+                else:
+                        print('Wrong Syntax.....')
+        elif len(sys.argv) > 2 and sys.argv[1] == 'setup':
+                if sys.argv[2].split('=')[0] == 'all':
+                        setUp()
                 elif sys.argv[2].split('=')[0] == 'systemtemplate' and len(sys.argv[2].split('=')[1]) != 0:
                         getSystemtemplate('%s' % sys.argv[2].split('=')[1])
                 else:

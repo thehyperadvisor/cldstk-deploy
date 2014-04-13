@@ -1,0 +1,17 @@
+---
+# ssh-copy-id root@hostname
+
+# cloudstack-mgmt_deploy.yaml
+# complete installation of cloudstack-management server
+
+- hosts: cldstk_kvm
+  user: root
+  vars_files:
+    - ../vars_file.yml
+
+  roles:
+    - cldstk-kvm
+
+
+
+

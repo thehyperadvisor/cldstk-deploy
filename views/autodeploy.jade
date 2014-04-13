@@ -32,5 +32,19 @@ block content
     p
       input(type="text", name="nfs_path", placeholder="NFS Path", style="font-size:16pt" )
     p
+    h4 Repository Type
+    p
+    <select name="repo_type" style="font-size:16pt">
+    <option selected="selected">Local</option>
+    <option>Internet</option>
+    </select>
+    p
+    h4 Repository Version
+    p
+    <select name="repo_version" id="repo_type" style="font-size:16pt">
+    <option selected="selected">4.3</option>
+    <option>4.2</option>
+    </select>
+    p
     p
       input(type="submit", value="Submit", id="deploysubmit", style="font-size:16pt" )

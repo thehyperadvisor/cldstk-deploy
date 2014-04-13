@@ -1,0 +1,45 @@
+---
+# ssh-copy-id root@hostname
+
+# cloudstack-mgmt_deploy.yaml
+# complete installation of cloudstack-management server
+
+- hosts: 127.0.0.1
+  connection: local
+  vars_files:
+    - ../vars_file.yml
+
+  tasks:
+    - name: Stop iptables
+      action: service name=iptables state=stopped
+
+    - name: Clean yum repositories
+      command: yum clean all
+
+    - name: Install Dependancies
+      action: yum name={{ item }} state=installed
+      with_items:
+        - libselinux-python
+    - name: Update cloudstack.repo file for local install
+      lineinfile: dest='../resources/cloudstack.repo' regexp='^#?baseurl=' 
+                  line="baseurl=http://{{ ansible_default_ipv4.address }}:3000/acs/rpms/{{ repoversion }}/" 
+                  state=present
+      when: repotype == "Local"
+      
+    - name: Update cloudstack.repo file for internet install
+      lineinfile: dest='../resources/cloudstack.repo' regexp='^#?baseurl=' 
+                  line="baseurl=http://cloudstack.apt-get.eu/rhel/{{ repoversion }}/" 
+                  state=present
+      when: repotype == "Internet"
+
+    - name: Update cloudstack-systmpl_preseed.yml file for local install
+      lineinfile: dest='../vars_file.yml' regexp='^#?systemtemplate'
+                  line='systemtemplate':' http://{{ ansible_default_ipv4.address }}:3000/acs/templates/{{ repoversion }}/systemvm64template-2014-01-14-master-kvm.qcow2.bz2 -h kvm -F'
+                  state=present
+      when: repotype == "Local"
+
+    - name: Update cloudstack-systmpl_preseed.yml file for local install
+      lineinfile: dest='../vars_file.yml' regexp='^#?systemtemplate'
+                  line='systemtemplate':' http://download.cloud.com/templates/4.3/systemvm64template-2014-01-14-master-kvm.qcow2.bz2 -h kvm -F'
+                  state=present
+      when: repotype == "Internet"
