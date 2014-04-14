@@ -7,7 +7,6 @@
   tasks:
   
 - include: cldstk-files-update.yml
-- include: cldstk-files-update.yml
 - include: mysql-server-install.yml
 - include: cldstk-mgmt_deploy.yml
 - include: mysql-replication-setup.yml

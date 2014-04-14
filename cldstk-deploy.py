@@ -82,6 +82,47 @@ def startall():
         errdata = start_now.communicate()[1]
         if len(errdata) != 0:
                 print errdata.strip("\n")
+def runfileupdates():
+        # ansible-playbook -i ./ansible/hosts ./ansible/run-all.yml -k
+        start_now = Popen(['ansible-playbook', '-i', './ansible/hosts', './ansible/play-books/cldstk-files-update.yml', '-k'], stderr=PIPE)
+        errdata = start_now.communicate()[1]
+        if len(errdata) != 0:
+                print errdata.strip("\n")
+
+def kvm_agent_Install():
+        # ansible-playbook -i ./ansible/hosts ./ansible/run-all.yml -k
+        start_now = Popen(['ansible-playbook', '-i', './ansible/hosts', './ansible/play-books/cldstk-agent_deploy.yml', '-k'], stderr=PIPE)
+        errdata = start_now.communicate()[1]
+        if len(errdata) != 0:
+                print errdata.strip("\n")
+
+def management_Install():
+        # ansible-playbook -i ./ansible/hosts ./ansible/run-all.yml -k
+        start_now = Popen(['ansible-playbook', '-i', './ansible/hosts', './ansible/play-books/cldstk-mgmt_deploy.yml', '-k'], stderr=PIPE)
+        errdata = start_now.communicate()[1]
+        if len(errdata) != 0:
+                print errdata.strip("\n")
+
+def db_Install():
+        # ansible-playbook -i ./ansible/hosts ./ansible/run-all.yml -k
+        start_now = Popen(['ansible-playbook', '-i', './ansible/hosts', './ansible/play-books/mysql-server-install.yml', '-k'], stderr=PIPE)
+        errdata = start_now.communicate()[1]
+        if len(errdata) != 0:
+                print errdata.strip("\n")
+
+def db_replication_Install():
+        # ansible-playbook -i ./ansible/hosts ./ansible/run-all.yml -k
+        start_now = Popen(['ansible-playbook', '-i', './ansible/hosts', './ansible/play-books/mysql-replication-setup.yml', '-k'], stderr=PIPE)
+        errdata = start_now.communicate()[1]
+        if len(errdata) != 0:
+                print errdata.strip("\n")
+
+def systemtemplate_Install():
+        # ansible-playbook -i ./ansible/hosts ./ansible/run-all.yml -k
+        start_now = Popen(['ansible-playbook', '-i', './ansible/hosts', './ansible/play-books/cldstk-preseed-kvm-systmpl.yml', '-k'], stderr=PIPE)
+        errdata = start_now.communicate()[1]
+        if len(errdata) != 0:
+                print errdata.strip("\n")
 
 def main():
         print ""
@@ -106,7 +147,14 @@ def main():
         else:
                 db_slave = ''
 
-        installwebsrv = raw_input('Install Management Servers?[Y/n]: ')
+        installmgmtsrv = raw_input('Install Management Server?[Y/n]: ')
+
+        if installmgmtsrv.lower() == 'y':
+                cldstk_mgmt = raw_input('Server[dns/ip]: ')
+        else:
+                cldstk_mgmt = ''
+
+        installwebsrv = raw_input('Install additional Management servers?[Y/n]: ')
 
         if installwebsrv.lower() == 'y':
                 cldstk_web = raw_input('Comma separated list: ')
@@ -146,6 +194,11 @@ def main():
                 if len(db_slave) != 0:
                         hostsfile.write('%s\n' % db_slave)
 
+                if len(cldstk_mgmt) != 0:
+                        hostsfile.write('\n[cldstk_mgmt]\n')
+                        cldstk_mgmt = cldstk_mgmt.split(',')[0]
+                        hostsfile.write('%s\n' % cldstk_mgmt)
+
                 if len(cldstk_web) != 0:
                         hostsfile.write('\n[cldstk_web]\n')
                         cldstk_web = cldstk_web.split(',')
@@ -163,22 +216,30 @@ def main():
 
                 # Write the vars_file.yml file
                 if len(db_master) != 0:
-                        vars_file = open('./ansible/resources/vars_file.yml','w')
+                        vars_file = open('./ansible/vars_file.yml','w')
+                        vars_file.write('mgmt_primary: %s\n' % cldstk_mgmt)
                         vars_file.write('master: %s\n' % db_master)
                         vars_file.write('slave: %s\n' % db_slave)
                         vars_file.write('cloud_repl_password: %s\n' % cloud_repl_password)
                         vars_file.write('mysql_root_password: %s\n' % mysql_root_password)
                         vars_file.write('nfs_server: %s\n' % nfs_server)
                         vars_file.write('nfs_path: %s\n' % nfs_path)
+                        vars_file.write('repotype: Internet\n')
+                        vars_file.write('repoversion: 4.3\n')
+                        vars_file.write('systemtemplate: \n')
                         vars_file.close()
                 else:
-                        vars_file = open('./ansible/resources/vars_file.yml','w')
+                        vars_file = open('./ansible/vars_file.yml','w')
+                        vars_file.write('mgmt_primary: %s\n' % cldstk_mgmt)
                         vars_file.write('master: %s\n' % mgmt_master)
                         vars_file.write('slave: %s\n' % db_slave)
                         vars_file.write('cloud_repl_password: %s\n' % cloud_repl_password)
                         vars_file.write('mysql_root_password: %s\n' % mysql_root_password)
                         vars_file.write('nfs_server: %s\n' % nfs_server)
                         vars_file.write('nfs_path: %s\n' % nfs_path)
+                        vars_file.write('repotype: Internet\n')
+                        vars_file.write('repoversion: 4.3\n')
+                        vars_file.write('systemtemplate: \n')
                         vars_file.close()
 
                 print('vars_file successfully writing to disk.....')
@@ -206,27 +267,40 @@ if __name__ == '__main__':
         elif len(sys.argv) == 2 and sys.argv[1] == '-S':
                 stopnode()
                 sys.exit()
-        elif len(sys.argv) > 2 and sys.argv[1] == 'get':
+        elif len(sys.argv) == 3 and sys.argv[1] == 'get':
                 if sys.argv[2].split('=')[0] == 'rpmversion' and len(sys.argv[2].split('=')[1]) != 0:
                         getRPMS('%s' % sys.argv[2].split('=')[1])
                 elif sys.argv[2].split('=')[0] == 'systemtemplate' and len(sys.argv[2].split('=')[1]) != 0:
                         getSystemtemplate('%s' % sys.argv[2].split('=')[1])
                 else:
                         print('Wrong Syntax.....')
-        elif len(sys.argv) > 2 and sys.argv[1] == 'setup':
-                if sys.argv[2].split('=')[0] == 'all':
+        elif len(sys.argv) == 3 and sys.argv[1] == 'setup':
+                if sys.argv[2] == 'all':
                         setUp()
-                elif sys.argv[2].split('=')[0] == 'systemtemplate' and len(sys.argv[2].split('=')[1]) != 0:
-                        getSystemtemplate('%s' % sys.argv[2].split('=')[1])
                 else:
                         print('Wrong Syntax.....')
-        elif len(sys.argv) == 2 and sys.argv[1] == '-i':
+        elif len(sys.argv) == 3 and sys.argv[1] == 'install':
                 startnode()
                 print('')
                 print('Started webserver........')
                 print('Browse to: http://localhost:3000')
                 print('')
-                startall()
+                if sys.argv[2] == 'all':
+                        startall()
+                elif sys.argv[2] == 'kvm-agent':
+                        runfileupdates()
+                        kvm_agent_Install()
+                elif sys.argv[2] == 'management':
+                        runfileupdates()
+                        management_Install()
+                elif sys.argv[2] == 'db':
+                        runfileupdates()
+                        db_Install()
+                elif sys.argv[2] == 'db-replication':
+                        runfileupdates()
+                        db_replication_Install()
+                elif sys.argv[2] == 'systemtemplate':
+                        systemtemplate_Install()
                 sys.exit()
         else:
                 main()

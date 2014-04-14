@@ -18,9 +18,10 @@
 
 # Install
 - **all** *(ex: python cldstk-deploy.py install all)*
-- **agent** *(ex: python cldstk-deploy.py install agent)*
+- **kvm-agent** *(ex: python cldstk-deploy.py install agent)*
 - **management** *(ex: python cldstk-deploy.py install management)*
-- **replication** *(ex: python cldstk-deploy.py install replication)*
+- **db** *(ex: python cldstk-deploy.py install db)*
+- **db-replication** *(ex: python cldstk-deploy.py install replication)*
 - **systemtemplate** *(ex: python cldstk-deploy.py install systemtemplate)*
 
 ## Getting Started
