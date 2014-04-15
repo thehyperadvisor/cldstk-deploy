@@ -18,6 +18,7 @@
 
 # Install
 - **all** *(ex: python cldstk-deploy.py install all)*
+- **all-in-one** *(ex: python cldstk-deploy.py install all-in-one)*
 - **kvm-agent** *(ex: python cldstk-deploy.py install agent)*
 - **management** *(ex: python cldstk-deploy.py install management)*
 - **db** *(ex: python cldstk-deploy.py install db)*

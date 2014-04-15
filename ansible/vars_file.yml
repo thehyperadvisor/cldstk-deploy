@@ -1,6 +1,6 @@
-mgmt_primary: cldstkwebsrv01
-master: cldstkdbsrv01
-slave: cldstkdbsrv02
+mgmt_primary: cldstkkvm01
+master: cldstkkvm01
+slave: 
 cloud_repl_password: password
 mysql_root_password: PaSSw0rd1234
 nfs_server: 192.168.78.148

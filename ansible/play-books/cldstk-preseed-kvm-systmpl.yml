@@ -19,6 +19,6 @@
       when: nfs_server != None
 
     - name: Seed secondary storage
-      command: /usr/share/cloudstack-common/scripts/storage/secondary/cloud-install-sys-tmplt -m /mnt/secondary -u {{ systemtemplate }}
-      when: nfs_server != None
+      command: /usr/share/cloudstack-common/scripts/storage/secondary/cloud-install-sys-tmplt -m /mnt/secondary -u "{{ systemtemplate }}" -h kvm -F
+      when: nfs_server != None and systemtemplate != None
 

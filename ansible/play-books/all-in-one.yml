@@ -1,0 +1,13 @@
+---
+
+- hosts: all
+  user: root
+  vars_files:
+    - ../vars_file.yml
+  tasks:
+  
+- include: cldstk-files-update.yml
+- include: cldstk-agent_deploy.yml
+- include: mysql-server-install.yml
+- include: cldstk-mgmt_deploy.yml
+- include: cldstk-preseed-kvm-systmpl.yml

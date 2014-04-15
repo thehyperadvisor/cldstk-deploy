@@ -9,6 +9,7 @@ savedHome = os.getcwd()
 
 def setUp():
         call(["rpm","-Uvh", "http://mirror.pnl.gov/epel/6/x86_64/epel-release-6-8.noarch.rpm"], shell=False)
+        call(["yum","install", "wget", "-y"], shell=False)
         call(["yum","install", "python-setuptools", "-y"], shell=False)
         call(["yum","install", "ansible", "-y"], shell=False)
         call(["yum","install", "nodejs", "-y"], shell=False)
@@ -74,11 +75,16 @@ def stopnode():
                 print('No webservers found........')
         print('')
 
-
-
 def startall():
         # ansible-playbook -i ./ansible/hosts ./ansible/run-all.yml -k
         start_now = Popen(['ansible-playbook', '-i', './ansible/hosts', './ansible/play-books/run-all.yml', '-k'], stderr=PIPE)
+        errdata = start_now.communicate()[1]
+        if len(errdata) != 0:
+                print errdata.strip("\n")
+
+def startall_in_one():
+        # ansible-playbook -i ./ansible/hosts ./ansible/run-all.yml -k
+        start_now = Popen(['ansible-playbook', '-i', './ansible/hosts', './ansible/play-books/all-in-one.yml', '-k'], stderr=PIPE)
         errdata = start_now.communicate()[1]
         if len(errdata) != 0:
                 print errdata.strip("\n")
@@ -287,6 +293,8 @@ if __name__ == '__main__':
                 print('')
                 if sys.argv[2] == 'all':
                         startall()
+                elif sys.argv[2] == 'all-in-one':
+                        startall_in_one()
                 elif sys.argv[2] == 'kvm-agent':
                         runfileupdates()
                         kvm_agent_Install()
