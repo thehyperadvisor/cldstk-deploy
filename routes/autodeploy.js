@@ -11,8 +11,8 @@ exports.start = function(req, res){
         kvm_hosts = req.body.kvm_hosts,
         web_hosts = req.body.web_hosts,
         nfs_server = req.body.nfs_server.toString().replace(',',''),
-        nfs_path = req.body.nfs_path.toString().replace(',','')
-        repo_type = req.body.repo_type.toString().replace(',','')
+        nfs_path = req.body.nfs_path.toString().replace(',',''),
+        repo_type = req.body.repo_type.toString().replace(',',''),
         repo_version = req.body.repo_version.toString().replace(',','')
 
     var cldstk_kvm = "";
@@ -22,7 +22,7 @@ exports.start = function(req, res){
     	cldstk_kvm = cldstk_kvm + kvm_hosts.split(",")[i] + "\n";
     };
     //console.log(cldstk_kvm);
-
+    
     var cldstk_web = "";
     var cldstk_mgmt = "";
 
@@ -31,16 +31,16 @@ exports.start = function(req, res){
     for (var i in web_hosts.split(",")) {
     	cldstk_web = cldstk_web + web_hosts.split(",")[i] + "\n";
     };
-    //console.log(cldstk_web);
+    console.log(cldstk_web);
 
-    var hostfile = "[localhost]\n127.0.0.1\n\n" +
+    var hostfiledata = "[localhost]\n127.0.0.1\n\n" +
                     "[db_master]\n" + db_master + "\n\n[db_slave]\n" + db_slave +
     				"\n\n[cldstk_web]\n" + cldstk_web + "\n[cldstk_kvm]\n" +
     				cldstk_kvm + "\n[mysql_servers]\n" + db_slave + "\n" + db_master + "\n" +
                     "\n[cldstk_mgmt]\n" + cldstk_mgmt + "\n";
 
 
-    fs.writeFile("./ansible/hosts", hostfile, function(err) {
+    fs.writeFile("./ansible/hosts", hostfiledata, function(err) {
         if(err) {
             console.log(err);
         } else {
@@ -48,7 +48,7 @@ exports.start = function(req, res){
         }
     }); 
 
-    var varsfile = "---\n" + 
+    var varsfiledata = "---\n" + 
                    "master: " + db_master + "\n" +
     			   "slave: " + db_slave + "\n" +
     				"cloud_repl_password: password" + "\n" +
@@ -59,14 +59,17 @@ exports.start = function(req, res){
                     "repoversion: " + repo_version + "\n";
 
 
-    fs.writeFile("./ansible/vars_file.yml", varsfile, function(err) {
+    fs.writeFile("./ansible/vars_file.yml", varsfiledata, function(err) {
         if(err) {
             console.log(err);
         } else {
             console.log("The vars file was saved!");
         }
     }); 
-    res.send({success:"success"});
+    res.redirect('/')
+    console.log("The end!");
+    //res.send({success:"success"});
     res.end();
+    //res.render('autodeploy', { title: 'CloudStack Auto Deploy' });
 };
 
