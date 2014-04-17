@@ -65,11 +65,16 @@ exports.start = function(req, res){
         } else {
             console.log("The vars file was saved!");
         }
-    }); 
-    res.redirect('/')
+    });
+    //res.write("Finished Successfully....")
+    setTimeout(function() { 
+        res.redirect('/');
+        res.end();
+    }, 5000);
+    
     console.log("The end!");
     //res.send({success:"success"});
-    res.end();
+    //res.end();
     //res.render('autodeploy', { title: 'CloudStack Auto Deploy' });
 };
 
