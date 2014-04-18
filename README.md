@@ -47,3 +47,26 @@ This will start the web server so that you can use the web interface.
 - You can choose whether or not to install Apache CloudStack Management servers.
 - You can choose whether or not to install KVM hsots with CloudStack Agent.
 
+## Added SSH Options
+
+You can share ssh-keys to provide ssh login without needing a password. The steps are as follows but cldstk-deploy will ask for a password either way.
+
+### Steps:
+    $ ssh-keygen -t rsa -b 2048
+    Generating public/private rsa key pair.
+    Enter file in which to save the key (/home/username/.ssh/id_rsa): **Enter**
+    Enter passphrase (empty for no passphrase): **Enter**
+    Enter same passphrase again: **Enter**
+    Your identification has been saved in /home/username/.ssh/id_rsa.
+    Your public key has been saved in /home/username/.ssh/id_rsa.pub.
+
+Now lets copy your keys to the target server:
+
+    $ ssh-copy-id user@server
+    user@server password: 
+
+Check that it works.
+
+    $ ssh user@server
+
+

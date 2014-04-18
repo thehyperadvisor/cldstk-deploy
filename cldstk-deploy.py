@@ -134,7 +134,9 @@ def main():
         print ""
         print "Cloudstack Deployment: Answer the questions below...."
         print ""
-        installmysql = raw_input('Install MySQL?[Y/n]: ')
+        installmysql = ''
+        while installmysql.lower() != 'y' and installmysql.lower() != 'n':
+                installmysql = raw_input('Install MySQL?[Y/n]: ')
 
         if installmysql.lower() == 'y':
                 db_master = raw_input('Db Server[dns/ip]: ')
@@ -146,35 +148,45 @@ def main():
         else:
                 mgmt_master = ''
 
-        installmysqlreplica = raw_input('Install MySQL Replica?[Y/n]: ')
+        installmysqlreplica = ''
+        while installmysqlreplica.lower() != 'y' and installmysqlreplica.lower() != 'n':
+                installmysqlreplica = raw_input('Install MySQL Replica?[Y/n]: ')
 
         if installmysqlreplica.lower() == 'y':
                 db_slave = raw_input('Db Replica Server[dns/ip]: ')
         else:
                 db_slave = ''
 
-        installmgmtsrv = raw_input('Install Management Server?[Y/n]: ')
+        installmgmtsrv = ''
+        while installmgmtsrv.lower() != 'y' and installmgmtsrv.lower() != 'n':
+                installmgmtsrv = raw_input('Install Management Server?[Y/n]: ')
 
         if installmgmtsrv.lower() == 'y':
                 cldstk_mgmt = raw_input('Server[dns/ip]: ')
         else:
                 cldstk_mgmt = ''
 
-        installwebsrv = raw_input('Install additional Management servers?[Y/n]: ')
+        installwebsrv = ''
+        while installwebsrv.lower() != 'y' and installwebsrv.lower() != 'n':
+                installwebsrv = raw_input('Install additional Management servers?[Y/n]: ')
 
         if installwebsrv.lower() == 'y':
                 cldstk_web = raw_input('Comma separated list: ')
         else:
                 cldstk_web = ''
 
-        installkvmhost = raw_input('Install KVM Hosts?[Y/n]: ')
+        installkvmhost = ''
+        while installkvmhost.lower() != 'y' and installkvmhost.lower() != 'n':
+                installkvmhost = raw_input('Install KVM Hosts?[Y/n]: ')
 
         if installkvmhost.lower() == 'y':
                 cldstk_kvmhost = raw_input('Comma separated list: ')
         else:
                 cldstk_kvmhost = ''
 
-        preseedtemplates = raw_input('Install System Templates?[Y/n]: ')
+        preseedtemplates = ''
+        while preseedtemplates.lower() != 'y' and preseedtemplates.lower() != 'n':
+                preseedtemplates = raw_input('Install System Templates?[Y/n]: ')
 
         if preseedtemplates.lower() == 'y':
                 nfs_server = raw_input('NFS Server[dns/ip]: ')
@@ -185,6 +197,23 @@ def main():
                 nfs_path = raw_input('NFS Path[/nfsdirpath]: ')
         else:
                 nfs_path = ''
+
+        changerepotype = ''
+        while changerepotype.lower() != 'y' and changerepotype.lower() != 'n':
+                changerepotype = raw_input('Change install type to "Local"?[Y/n]: ')
+        if changerepotype.lower() == 'y':
+                repo_type = 'Local'
+        else:
+                repo_type = 'Internet'
+
+        changerepoversion = ''
+        while changerepoversion.lower() != 'y' and changerepoversion.lower() != 'n':
+                changerepoversion = raw_input('Change install version to "4.2"?[Y/n]: ')
+        if changerepoversion.lower() == 'y':
+                repo_version = '4.2'
+        else:
+                repo_version = '4.3'
+
 
 
         # Write the /etc/ansible/hosts file
@@ -230,8 +259,8 @@ def main():
                         vars_file.write('mysql_root_password: %s\n' % mysql_root_password)
                         vars_file.write('nfs_server: %s\n' % nfs_server)
                         vars_file.write('nfs_path: %s\n' % nfs_path)
-                        vars_file.write('repotype: Internet\n')
-                        vars_file.write('repoversion: 4.3\n')
+                        vars_file.write('repotype: %s\n' % repo_type)
+                        vars_file.write('repoversion: %s\n' % repo_version)
                         vars_file.write('systemtemplate: \n')
                         vars_file.close()
                 else:
