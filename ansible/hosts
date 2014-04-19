@@ -2,18 +2,20 @@
 127.0.0.1
 
 [db_master]
-cldstkkvm01
+cldstkdbsrv01
 
 [db_slave]
-
+cldstkdbsrv02
 
 [mysql_servers]
-cldstkkvm01
+cldstkdbsrv01
+cldstkdbsrv02
 
 [cldstk_web]
+cldstkwebsrv02
 
 [cldstk_mgmt]
-cldstkkvm01
+cldstkwebsrv01
 
 [cldstk_kvm]
 cldstkkvm01
