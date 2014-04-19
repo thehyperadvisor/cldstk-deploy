@@ -36,25 +36,25 @@
       lineinfile: dest='../vars_file.yml' regexp='^#?systemtemplate'
                   line='systemtemplate':' http://{{ ansible_default_ipv4.address }}:3000/acs/templates/4.3/systemvm64template-2014-01-14-master-kvm.qcow2.bz2'
                   state=present
-      when: repotype == "Local" and repoversion == "4.3"
+      when: repotype == "Local" and repoversion == 4.3
 
     - name: Update cloudstack-systmpl_preseed.yml file for local install
       lineinfile: dest='../vars_file.yml' regexp='^#?systemtemplate'
                   line='systemtemplate':' http://download.cloud.com/templates/4.3/systemvm64template-2014-01-14-master-kvm.qcow2.bz2'
                   state=present
-      when: repotype == "Internet" and repoversion == "4.3"
+      when: repotype == "Internet" and repoversion == 4.3
 
     - name: Update cloudstack-systmpl_preseed.yml file for local install
       lineinfile: dest='../vars_file.yml' regexp='^#?systemtemplate'
                   line='systemtemplate':' http://{{ ansible_default_ipv4.address }}:3000/acs/templates/4.2/systemvmtemplate-2013-06-12-master-kvm.qcow2.bz2'
                   state=present
-      when: repotype == "Local" and repoversion == "4.2"
+      when: repotype == "Local" and repoversion == 4.2
 
     - name: Update cloudstack-systmpl_preseed.yml file for local install
       lineinfile: dest='../vars_file.yml' regexp='^#?systemtemplate'
                   line='systemtemplate':' http://download.cloud.com/templates/4.2/systemvmtemplate-2013-06-12-master-kvm.qcow2.bz2'
                   state=present
-      when: repotype == "Internet" and repoversion == "4.2"
+      when: repotype == "Internet" and repoversion == 4.2
 
 
 

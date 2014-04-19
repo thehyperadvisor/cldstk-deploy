@@ -1,22 +1,21 @@
-# Verbs
-
-**Install** - used to run ansible playbook 
-
-**Get** - used to download dependancies 
-
-**Setup** - used to install rpm dependancies (nodejs and ansible) 
-
 # Setup
+
+Used to install rpm dependancies (nodejs and ansible) 
+
 - **all**  *(ex: python cldstk-deploy.py setup all)*
-- **nodejs** *(ex: python cldstk-deploy.py setup nodejs)*
-- **ansible** *(ex: python cldstk-deploy.py setup ansible)*
 
 # Get
+
+Used to download dependancies 
+
 - **all** *(ex: python cldstk-deploy.py get all)*
 - **rpmversion=** *(ex: python cldstk-deploy.py get rpmversion=4.3)*
 - **systemtemplate=** *(ex: python cldstk-deploy.py get systemtemplate=4.3)*
 
 # Install
+
+Used to run ansible playbook 
+
 - **all** *(ex: python cldstk-deploy.py install all)*
 - **all-in-one** *(ex: python cldstk-deploy.py install all-in-one)*
 - **kvm-agent** *(ex: python cldstk-deploy.py install agent)*
