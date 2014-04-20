@@ -1,10 +1,15 @@
-#! /usr/bin/env python
+#!/usr/bin/python
+
 from subprocess import call,Popen, PIPE
-import sys, os, shutil
+import sys, os, commands
 
 cloud_repl_password = 'password'
 mysql_root_password = 'PaSSw0rd1234'
 savedHome = os.getcwd()
+
+eth = 'eth0'
+eth_ip = commands.getoutput("ip address show dev " + eth).split()
+eth_ip = eth_ip[eth_ip.index('inet') + 1].split('/')[0]
 
 
 def setUp():
@@ -58,7 +63,12 @@ def startnode():
                 print errdata.strip("\n")
         if len(errdata) == 0: 
                 pass
-        
+                print('')
+                print('Started webserver........')
+                print('Browse to: http://%s:3000' % eth_ip)
+                print('')
+
+
 def stopnode():
         # Check if webserver is already running. If so, kill and restart new process
         chkprog = Popen(['node_modules/forever/bin/forever', 'list'], stdout=PIPE)
@@ -136,7 +146,7 @@ def main():
         print ""
         installmysql = ''
         while installmysql.lower() != 'y' and installmysql.lower() != 'n':
-                installmysql = raw_input('Install MySQL?[Y/n]: ')
+                installmysql = raw_input('Install Primary Database Server?[Y/n]: ')
 
         if installmysql.lower() == 'y':
                 db_master = raw_input('Db Server[dns/ip]: ')
@@ -144,22 +154,22 @@ def main():
                 db_master = ''
 
         if installmysql.lower() == 'n':
-                mgmt_master = raw_input('Whats the current DB Server?[dns/ip]: ')
+                db_primary = raw_input('Whats the current DB Server?[dns/ip]: ')
         else:
-                mgmt_master = ''
+                db_primary = ''
 
         installmysqlreplica = ''
         while installmysqlreplica.lower() != 'y' and installmysqlreplica.lower() != 'n':
-                installmysqlreplica = raw_input('Install MySQL Replica?[Y/n]: ')
+                installmysqlreplica = raw_input('Configure Database Replica?[Y/n]: ')
 
         if installmysqlreplica.lower() == 'y':
-                db_slave = raw_input('Db Replica Server[dns/ip]: ')
+                db_slave = raw_input('DB Replica Server[dns/ip]: ')
         else:
                 db_slave = ''
 
         installmgmtsrv = ''
         while installmgmtsrv.lower() != 'y' and installmgmtsrv.lower() != 'n':
-                installmgmtsrv = raw_input('Install Management Server?[Y/n]: ')
+                installmgmtsrv = raw_input('Install Primary Management Server?[Y/n]: ')
 
         if installmgmtsrv.lower() == 'y':
                 cldstk_mgmt = raw_input('Server[dns/ip]: ')
@@ -184,6 +194,14 @@ def main():
         else:
                 cldstk_kvmhost = ''
 
+
+        mgmtrestart = ''
+        if installmysqlreplica.lower() == 'y' and installmgmtsrv.lower() == 'n' and installwebsrv.lower() == 'n':
+                while mgmtrestart.lower() == '':
+                        print('Need to restart services on management servers. List them below.')
+                        mgmtrestart = raw_input('Comma separated list: ')
+        else: pass
+
         preseedtemplates = ''
         while preseedtemplates.lower() != 'y' and preseedtemplates.lower() != 'n':
                 preseedtemplates = raw_input('Install System Templates?[Y/n]: ')
@@ -200,11 +218,11 @@ def main():
 
         changerepotype = ''
         while changerepotype.lower() != 'y' and changerepotype.lower() != 'n':
-                changerepotype = raw_input('Change install type to "Local"?[Y/n]: ')
+                changerepotype = raw_input('Change install type to "Internet"?[Y/n]: ')
         if changerepotype.lower() == 'y':
-                repo_type = 'Local'
-        else:
                 repo_type = 'Internet'
+        else:
+                repo_type = 'Local'
 
         changerepoversion = ''
         while changerepoversion.lower() != 'y' and changerepoversion.lower() != 'n':
@@ -214,37 +232,59 @@ def main():
         else:
                 repo_version = '4.3'
 
-
+        system_template = ''
+        if repo_version == '4.3' and repo_type == 'Local':
+                system_template = 'http://%s:3000/acs/templates/4.3/systemvm64template-2014-01-14-master-kvm.qcow2.bz2' % eth_ip
+        if repo_version == '4.2' and repo_type == 'Local':
+                system_template = 'http://%s:3000/acs/templates/4.2/systemvmtemplate-2013-06-12-master-kvm.qcow2.bz2' % eth_ip
+        if repo_version == '4.3' and repo_type == 'Internet':
+                system_template = 'ttp://download.cloud.com/templates/4.3/systemvm64template-2014-01-14-master-kvm.qcow2.bz2' % eth_ip
+        if repo_version == '4.2' and repo_type == 'Internet':
+                system_template = 'http://download.cloud.com/templates/4.2/systemvmtemplate-2013-06-12-master-kvm.qcow2.bz2' % eth_ip
 
         # Write the /etc/ansible/hosts file
-        if len(db_master) != 0:
+        if len(db_master) != 0 or len(db_primary) !=0:
                 hostsfile = open('./ansible/hosts','w')
                 hostsfile.write('[localhost]\n127.0.0.1\n\n')
-                hostsfile.write('[db_master]\n%s\n' % db_master)
+                
+                hostsfile.write('[db_master]\n')
+                if len(db_master) != 0:
+                        hostsfile.write('%s\n' % db_master)
+                else:
+                        hostsfile.write('%s\n' % db_primary)
 
-                if len(db_slave) != 0:
-                        hostsfile.write('\n[db_slave]\n%s\n' % db_slave)
-
-                hostsfile.write('\n[mysql_servers]\n%s\n' % db_master)
+                hostsfile.write('\n[db_slave]\n')
                 if len(db_slave) != 0:
                         hostsfile.write('%s\n' % db_slave)
 
+                hostsfile.write('\n[mysql_servers]\n')
+                if len(db_master) != 0:
+                        hostsfile.write('%s\n' % db_master)
+                if len(db_slave) != 0:
+                        hostsfile.write('%s\n' % db_slave)
+
+                hostsfile.write('\n[cldstk_mgmt]\n')
                 if len(cldstk_mgmt) != 0:
-                        hostsfile.write('\n[cldstk_mgmt]\n')
                         cldstk_mgmt = cldstk_mgmt.split(',')[0]
                         hostsfile.write('%s\n' % cldstk_mgmt)
 
+                hostsfile.write('\n[cldstk_web]\n')
                 if len(cldstk_web) != 0:
-                        hostsfile.write('\n[cldstk_web]\n')
                         cldstk_web = cldstk_web.split(',')
                         for w in cldstk_web:
                                 hostsfile.write('%s\n' % w.strip())
 
+                hostsfile.write('\n[cldstk_kvm]\n')
                 if len(cldstk_kvmhost) != 0:
-                        hostsfile.write('\n[cldstk_kvm]\n')
                         cldstk_kvmhost = cldstk_kvmhost.split(',')
                         for k in cldstk_kvmhost:
                                 hostsfile.write('%s\n' % k.strip())
+
+                hostsfile.write('\n[mgmt_restart]\n')
+                if len(mgmtrestart) != 0:
+                        mgmt_restart = mgmtrestart.split(',')
+                        for w in mgmt_restart:
+                                hostsfile.write('%s\n' % w.strip())
 
                 hostsfile.close()
                 print('ansible hosts file successfully writing to disk.....')
@@ -261,20 +301,20 @@ def main():
                         vars_file.write('nfs_path: %s\n' % nfs_path)
                         vars_file.write('repotype: %s\n' % repo_type)
                         vars_file.write('repoversion: %s\n' % repo_version)
-                        vars_file.write('systemtemplate: \n')
+                        vars_file.write('systemtemplate: %s\n' % system_template)
                         vars_file.close()
                 else:
                         vars_file = open('./ansible/vars_file.yml','w')
                         vars_file.write('mgmt_primary: %s\n' % cldstk_mgmt)
-                        vars_file.write('master: %s\n' % mgmt_master)
+                        vars_file.write('master: %s\n' % db_primary)
                         vars_file.write('slave: %s\n' % db_slave)
                         vars_file.write('cloud_repl_password: %s\n' % cloud_repl_password)
                         vars_file.write('mysql_root_password: %s\n' % mysql_root_password)
                         vars_file.write('nfs_server: %s\n' % nfs_server)
                         vars_file.write('nfs_path: %s\n' % nfs_path)
-                        vars_file.write('repotype: Internet\n')
-                        vars_file.write('repoversion: 4.3\n')
-                        vars_file.write('systemtemplate: \n')
+                        vars_file.write('repotype: %s\n' % repo_type)
+                        vars_file.write('repoversion: %s\n' % repo_version)
+                        vars_file.write('systemtemplate: %s\n' % system_template)
                         vars_file.close()
 
                 print('vars_file successfully writing to disk.....')
@@ -294,32 +334,24 @@ def main():
 if __name__ == '__main__':
         if len(sys.argv) == 2 and sys.argv[1] == '-s':
                 startnode()
-                print('')
-                print('Started webserver........')
-                print('Browse to: http://localhost:3000')
-                print('')
                 sys.exit()
-        elif len(sys.argv) == 2 and sys.argv[1] == '-S':
+        if len(sys.argv) == 2 and sys.argv[1] == '-S':
                 stopnode()
                 sys.exit()
-        elif len(sys.argv) == 3 and sys.argv[1] == 'get':
+        if len(sys.argv) == 3 and sys.argv[1] == 'get':
                 if sys.argv[2].split('=')[0] == 'rpmversion' and len(sys.argv[2].split('=')[1]) != 0:
                         getRPMS('%s' % sys.argv[2].split('=')[1])
                 elif sys.argv[2].split('=')[0] == 'systemtemplate' and len(sys.argv[2].split('=')[1]) != 0:
                         getSystemtemplate('%s' % sys.argv[2].split('=')[1])
                 else:
                         print('Wrong Syntax.....')
-        elif len(sys.argv) == 3 and sys.argv[1] == 'setup':
+        if len(sys.argv) == 3 and sys.argv[1] == 'setup':
                 if sys.argv[2] == 'all':
                         setUp()
                 else:
                         print('Wrong Syntax.....')
-        elif len(sys.argv) == 3 and sys.argv[1] == 'install':
+        if len(sys.argv) == 3 and sys.argv[1] == 'install':
                 startnode()
-                print('')
-                print('Started webserver........')
-                print('Browse to: http://localhost:3000')
-                print('')
                 if sys.argv[2] == 'all':
                         startall()
                 elif sys.argv[2] == 'all-in-one':
@@ -339,5 +371,5 @@ if __name__ == '__main__':
                 elif sys.argv[2] == 'systemtemplate':
                         systemtemplate_Install()
                 sys.exit()
-        else:
+        if len(sys.argv) == 1:
                 main()

@@ -3,14 +3,8 @@
 
 # cloudstack-mgmt_deploy.yaml
 # complete installation of cloudstack-management server
-- hosts: cldstk_web
-  user: root
 
-  tasks:
-    - name: Stop cloudstack-management service
-      action: service name=cloudstack-management state=stopped
-
-- hosts: cldstk_mgmt
+- hosts: cldstk_mgmt:mgmt_restart:cldstk_web
   user: root
 
   tasks:
@@ -116,14 +110,7 @@
       when: slave != None and slave != master
 
 
-- hosts: cldstk_web
-  user: root
-
-  tasks:
-    - name: Start cloudstack-management service
-      action: service name=cloudstack-management state=restarted
-
-- hosts: cldstk_mgmt
+- hosts: cldstk_mgmt:mgmt_restart:cldstk_web
   user: root
 
   tasks:
