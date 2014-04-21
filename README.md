@@ -39,7 +39,7 @@ Or you can use the "INTERNET" installation type which will use the Apache CloudS
 
 ## Usage Instructions
 
-Browse the **cldstk-deploy** directory then run the command below.
+Browse the **cldstk-deploy** directory then run the command below. **Note: At this time you must have already sshed into the systems you plan on using this tool with at least once.**
 
     python start.py
 
