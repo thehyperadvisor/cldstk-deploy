@@ -1,7 +1,18 @@
 cldstk-deploy
 =============
 
-CloudStack Deploy is a utility for making Apache CloudStack and KVM  installations quick, easy and painless.
+CloudStack Deploy is a utility for making Apache CloudStack and KVM  installations quick, easy and painless. 
+
+## Features
+
+- can pre download Apache CloudStack RPMS (version 4.2 & 4.3)
+- can pre download KVM system template
+- runs web server to be used as local RPM and systemtemplate repository
+- can install and setup cloudstack-management servers (One or many)
+- can install and setup mysql database servers (Primary and Repica)
+- can install and setup cloudstack-agent KVM hosts
+- can preseed KVM system template
+- can mix options
 
 ## Requirements
 
@@ -9,64 +20,63 @@ CloudStack Deploy is a utility for making Apache CloudStack and KVM  installatio
 - Systems must have internet connectivity
 - Host resolution must be working for the systems that runs this process
 
-## Instructions
+# Getting Started
 
-#### Command line:
+## Setting up the environment
+
+1. Download **cldstk-deploy** from Github.
+2. Setup **cldstk-deploy** using the "setup all" option. This prepares the environment and installs all the required packages for **cldstk-deploy** (nodejs and ansible).
+
+    `python cldstk-deploy.py setup all`
+
+3. (OPTIONAL BUT RECOMMENDED) Download the Apache Cloudstack RPMS and Systemtemplates using the "get rpmversion=" and "get systemtemplate=" options. 
+
+    `python cldstk-deploy.py get rpmversion=4.3`
+
+    `python cldstk-deploy.py get systemtemplate=4.3`
+
+Or you can use the "INTERNET" installation type which will use the Apache CloudStack repository. **Note: The Internet install could be really slow and it's recommended to pre download the RPMS and System Templates before doing a full deployment with many systems.**
+
+## Usage Instructions
+
+Browse the **cldstk-deploy** directory then run the command below.
 
     python start.py
-    
+
 This will start asking questions from the command prompt.
 
-Next all you have to do is answer the preseeding questions. Example shown below.
-
-    Install MySQL?[Y/n]: y
+Next all you have to do is answer the questions. Example shown below.
+    
+    [root@ansible cldstk-deploy]# python cldstk-deploy.py
+    
+    Cloudstack Deployment: Answer the questions below....
+    
+    Install Primary Database Server?[Y/n]: y
     Db Server[dns/ip]: cldstkdbsrv01
-    Install MySQL Replica?[Y/n]: y
-    Db Replica Server[dns/ip]: cldstkdbsrv02
-    Install Management Servers?[Y/n]: y
-    Comma separated list: cldstkwebsrv01,cldstkwebsrv02 
+    Configure Database Replica?[Y/n]: y
+    DB Replica Server[dns/ip]: cldstkdbsrv02
+    Install Primary Management Server?[Y/n]: y
+    Server[dns/ip]: cldstkwebsrv01
+    Install additional Management servers?[Y/n]: y             
+    Comma separated list: cldstkwebsrv02,cldstkwebsrv03
     Install KVM Hosts?[Y/n]: y
     Comma separated list: cldstkkvm01,cldstkkvm02
-    SSH password:
+    Install System Templates?[Y/n]: y
+    NFS Server[dns/ip]: labnas01
+    NFS Path[/nfsdirpath]: /nfs/secondary
+    Change install type to "Internet"?[Y/n]: n
+    Change install version to "4.2"?[Y/n]: n
+    ansible hosts file successfully writing to disk.....
+    vars_file successfully writing to disk.....
+    Start installation now?[Y/n]: y
+    SSH password: 
     
 After you enter your password it's off to the races. If everything goes as planned you'll have all your Apache CloudStack components up and running in no time.
 
-#### Web UI:
-
-From the root directory type:
-
-    python start.py -s
-
-This will start the web server so that you can use the web interface.
+For "All-In-One" installation, you can use the same system name for "Primary Management Server", "Primary DB Server" and "KVM Host".
 
 
-## Options
 
-- You can choose whether or not to install MySQL. If you choose not to install MySQL, you must provide the current MySQL server name or ip address.
-- You can choose whether or not to install MySQL replication partner.
-- You can choose whether or not to install Apache CloudStack Management servers.
-- You can choose whether or not to install KVM hsots with CloudStack Agent.
 
-## Added SSH Options
-
-You can share ssh-keys to provide ssh login without needing a password. The steps are as follows but cldstk-deploy will ask for a password either way.
-
-### Steps:
-    $ ssh-keygen -t rsa -b 2048
-    Generating public/private rsa key pair.
-    Enter file in which to save the key (/home/username/.ssh/id_rsa): **Enter**
-    Enter passphrase (empty for no passphrase): **Enter**
-    Enter same passphrase again: **Enter**
-    Your identification has been saved in /home/username/.ssh/id_rsa.
-    Your public key has been saved in /home/username/.ssh/id_rsa.pub.
-
-Now lets copy your keys to the target server:
-
-    $ ssh-copy-id user@server
-    user@server password: 
-
-Check that it works.
-
-    $ ssh user@server
 
 
