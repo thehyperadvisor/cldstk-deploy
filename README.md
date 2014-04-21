@@ -1,7 +1,7 @@
 cldstk-deploy
 =============
 
-CloudStack Deploy is a utility for making Apache CloudStack and KVM  installations quick, easy and painless. 
+CloudStack Deploy is a utility for making Apache CloudStack and KVM  installations quick, easy and painless. Meant to be reusable so you can deploy Apache CloudStack more than once after you've downloaded the RPMS and systemtemplates locally with cldstk-deploy.
 
 ## Features
 
