@@ -44,7 +44,7 @@ CloudStack Deploy is a utility for making Apache CloudStack and KVM  installatio
 
     `python build-4.3.0-rpms.py`
 
-Takes roughly 10 minutes to build and installs additional packages.
+   Takes roughly 10 minutes to build and installs additional packages.
 
 6. Download KVM system template. Version 4.2 or 4.3 works.
 
