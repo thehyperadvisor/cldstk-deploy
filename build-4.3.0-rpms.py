@@ -16,7 +16,7 @@ buildcommand = """yum groupinstall "Development Tools" -y \n
 yum install git ant ant-devel java-1.6.0-openjdk java-1.6.0-openjdk-devel mysql mysql-server tomcat6 mkisofs gcc python MySQL-python openssh-clients wget rpm-build ws-commons-util net-snmp genisoimage createrepo -y \n
 wget http://www.us.apache.org/dist/maven/maven-3/3.0.5/binaries/apache-maven-3.0.5-bin.tar.gz \n
 cd /usr/local/ \n
-tar -zxvf ~/apache-maven-3.0.5-bin.tar.gz \n
+tar -zxvf %s/apache-maven-3.0.5-bin.tar.gz \n
 cd %s \n
 mkdir -p public/cloudstack.apt-get.eu/rhel/4.3 \n
 echo export M2_HOME=/usr/local/apache-maven-3.0.5 >> ~/.bashrc \n
@@ -26,12 +26,12 @@ tar -jxvf apache-cloudstack-4.3.0-src.tar.bz2 \n
 cd apache-cloudstack-4.3.0-src/packaging/centos63 \n
 source ~/.bashrc \n
 ./package.sh
-cd ../../dist/rpmbuild/RPMS/x86_64
+cd %s/apache-cloudstack-4.3.0-src/dist/rpmbuild/RPMS/x86_64
 createrepo .
-cp -rf * ../../../../../public/cloudstack.apt-get.eu/rhel/4.3
+cp -rf * %s/public/cloudstack.apt-get.eu/rhel/4.3
 cd %s
 rm -rf apache-*
-\n""" % (homedir, homedir)
+\n""" % (homedir, homedir, homedir, homedir, homedir)
 
 open('buildrpms.sh', 'w').write(buildcommand)
 
