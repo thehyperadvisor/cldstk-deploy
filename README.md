@@ -54,7 +54,7 @@ RPM packages and system templates must be in downloaded first when NOT using the
 
 ## Usage Instructions
 
-Browse the **cldstk-deploy** directory then run the command below. **Note: At this time you must have already sshed into the systems you plan on using this tool with at least once which includes 127.0.0.1.**
+Browse the **cldstk-deploy** directory then run the command below. 
 
     python start.py
 
@@ -81,6 +81,7 @@ Next all you have to do is answer the questions. Example shown below.
     NFS Path[/nfsdirpath]: /nfs/secondary
     Change install type to "Internet"?[Y/n]: n
     Change install version to "4.2"?[Y/n]: n
+    Add ssh rsa keys to ~/.ssh/known_hosts?[Y/n]: y
     ansible hosts file successfully writing to disk.....
     vars_file successfully writing to disk.....
     Start installation now?[Y/n]: y
