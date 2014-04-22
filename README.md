@@ -54,7 +54,7 @@ RPM packages and system templates must be in downloaded first when NOT using the
 
 ## Usage Instructions
 
-Browse the **cldstk-deploy** directory then run the command below. **Note: At this time you must have already sshed into the systems you plan on using this tool with at least once.**
+Browse the **cldstk-deploy** directory then run the command below. **Note: At this time you must have already sshed into the systems you plan on using this tool with at least once which includes 127.0.0.1.**
 
     python start.py
 
