@@ -5,11 +5,15 @@ import sys, os, commands
 
 cloud_repl_password = 'password'
 mysql_root_password = 'PaSSw0rd1234'
+
 savedHome = os.getcwd()
+userHome = os.path.expanduser('~')
 
 eth = 'eth0'
 eth_ip = commands.getoutput("ip address show dev " + eth).split()
 eth_ip = eth_ip[eth_ip.index('inet') + 1].split('/')[0]
+
+
 
 def setUp():
         call(["rpm","-Uvh", "http://mirror.pnl.gov/epel/6/x86_64/epel-release-6-8.noarch.rpm"], shell=False)
@@ -22,12 +26,26 @@ def setUp():
         call(["npm","install", "forever", "-g"], shell=False)
         call(["service","iptables", "stop"], shell=False)
         call(["chkconfig","iptables", "off"], shell=False)
+        if os.path.isfile(userHome + "/.ssh/known_hosts") == False:
+                call(["mkdir ~/.ssh"], shell=True)
+                call(["touch ~/.ssh/known_hosts"], shell=True)
+        else: pass
         call(["ssh-keyscan -H '127.0.0.1' >> ~/.ssh/known_hosts"], shell=True)
 
 def getRPMS(repo):
         # Download rpm packages from remote repository
-        os.chdir(savedHome + '/public')
-        call(["wget","--no-parent", "-r", "--reject", "index.html*", "http://cloudstack.apt-get.eu/rhel/%s/" % repo], shell=False)
+        if repo == '4.3':
+                os.chdir(savedHome + '/public/cloudstack.apt-get.eu/rhel/')
+                call(["rm","-rf", "4.3"], shell=False)
+                call(["wget","https://www.dropbox.com/sh/7fa1j6ymap1wrgu/BXfoDzUNWy/cloudstack-4.3.0-rpms.tar.gz"], shell=False)
+                call(["tar","-zxvf", "cloudstack-4.3.0-rpms.tar.gz"], shell=False)
+                call(["rm -f cloudstack-4.3.0-rpms.tar.*"], shell=True)
+        if repo == '4.2':
+                os.chdir(savedHome + '/public/cloudstack.apt-get.eu/rhel/')
+                call(["rm","-rf", "4.2"], shell=False)
+                call(["wget","https://www.dropbox.com/sh/7fa1j6ymap1wrgu/KC6chASB5H/cloudstack-4.2.1-rpms.tar.gz"], shell=False)
+                call(["tar","-zxvf", "cloudstack-4.2.1-rpms.tar.gz"], shell=False)
+                call(["rm -f cloudstack-4.2.1-rpms.tar.*"], shell=True)
         os.chdir(savedHome)
 
 def getSystemtemplate(repo):
