@@ -11,6 +11,10 @@ eth = 'eth0'
 eth_ip = commands.getoutput("ip address show dev " + eth).split()
 eth_ip = eth_ip[eth_ip.index('inet') + 1].split('/')[0]
 
+if os.getfileexist
+
+call(["ssh-keyscan", "-H", os.environ['HOSTNAME'], ">>", "~/.ssh/known_hosts"], shell=True)
+
 
 def setUp():
         call(["rpm","-Uvh", "http://mirror.pnl.gov/epel/6/x86_64/epel-release-6-8.noarch.rpm"], shell=False)
@@ -23,6 +27,7 @@ def setUp():
         call(["npm","install", "forever", "-g"], shell=False)
         call(["service","iptables", "stop"], shell=False)
         call(["chkconfig","iptables", "off"], shell=False)
+        call(["ssh-keyscan -H '127.0.0.1' >> ~/.ssh/known_hosts"], shell=True)
 
 def getRPMS(repo):
         # Download rpm packages from remote repository
