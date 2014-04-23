@@ -34,29 +34,28 @@ CloudStack Deploy is a utility for making Apache CloudStack and KVM  installatio
 
     `python cldstk-deploy.py setup all`
 
-3. You can use the "INTERNET" installation type which will use the Apache CloudStack repository. **Note: The Internet install could be really slow and it's recommended to pre download the RPMS and System Templates before doing a full deployment with many systems.**
-
-4. (OPTIONAL) Download the Apache Cloudstack RPMS and Systemtemplates using the "get rpmversion=" and "get systemtemplate=" options. 
+3. Download the Apache Cloudstack RPMS and Systemtemplates using the "get rpmversion=" and "get systemtemplate=" options. 
 
     `python cldstk-deploy.py get rpmversion=4.3`
 
-5. (OPTIONAL BUT RECOMMENDED) Build RPMS from source. ONLY 4.3 for now.
+4. (OPTIONAL) Build RPMS from source. ONLY 4.3 for now. ONLY IF YOU DO NOT DOWNLOAD RPMS.
 
     `python build-4.3.0-rpms.py`
 
    Takes roughly 10 minutes to build and installs additional packages.
 
-6. Download KVM system template. Version 4.2 or 4.3 works.
+5. Download KVM system template. Version 4.2 or 4.3 works.
 
    `python cldstk-deploy.py get systemtemplate=4.3`
 
-RPM packages and system templates must be in downloaded first when NOT using the "Internet" installation type.
 
 ## Usage Instructions
 
+RPM packages and system templates must be in downloaded first when NOT using the "Internet" installation type.
+
 Browse the **cldstk-deploy** directory then run the command below. 
 
-    python start.py
+    python cldstk-deploy.py
 
 This will start asking questions from the command prompt.
 
