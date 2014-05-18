@@ -266,9 +266,9 @@ def main():
         if repo_version == '4.2' and repo_type == 'Local':
                 system_template = 'http://%s:3000/acs/templates/4.2/systemvmtemplate-2013-06-12-master-kvm.qcow2.bz2' % eth_ip
         if repo_version == '4.3' and repo_type == 'Internet':
-                system_template = 'http://download.cloud.com/templates/4.3/systemvm64template-2014-01-14-master-kvm.qcow2.bz2' % eth_ip
+                system_template = 'http://download.cloud.com/templates/4.3/systemvm64template-2014-01-14-master-kvm.qcow2.bz2'
         if repo_version == '4.2' and repo_type == 'Internet':
-                system_template = 'http://download.cloud.com/templates/4.2/systemvmtemplate-2013-06-12-master-kvm.qcow2.bz2' % eth_ip
+                system_template = 'http://download.cloud.com/templates/4.2/systemvmtemplate-2013-06-12-master-kvm.qcow2.bz2'
 
 
         # Write the /etc/ansible/hosts file
