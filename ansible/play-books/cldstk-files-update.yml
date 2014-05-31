@@ -81,3 +81,12 @@
                   backup=yes
       when: hostvars[item]['ansible_default_ipv4']['address'] is defined
       with_items: ${groups.all}
+      
+    - name: Stop service NTP
+      action: service name=ntpd state=stopped
+
+    - name: Update system time
+      command: ntpdate 0.centos.pool.ntp.org
+
+    - name: Start service NTP
+      action: service name=ntpd state=started
