@@ -2,17 +2,21 @@
 import hashlib, hmac, string, base64
 from subprocess import call,Popen, PIPE
 import sys, os, commands, urllib, json
-from ansible.playbook import PlayBook
-from ansible import callbacks
-from ansible import utils
 import getpass, time
 import httplib
 from urlparse import urlparse
 
-# Set ansible api variables
-playbook_cb = callbacks.PlaybookCallbacks(verbose=utils.VERBOSITY)
-stats = callbacks.AggregateStats()
-runner_cb = callbacks.PlaybookRunnerCallbacks(stats, verbose=utils.VERBOSITY)
+try:
+    # Set ansible api variables
+    from ansible.playbook import PlayBook
+    from ansible import callbacks
+    from ansible import utils
+    playbook_cb = callbacks.PlaybookCallbacks(verbose=utils.VERBOSITY)
+    stats = callbacks.AggregateStats()
+    runner_cb = callbacks.PlaybookRunnerCallbacks(stats, verbose=utils.VERBOSITY)
+except:
+    pass
+
 
 # Set user passwords for mysql users
 cloud_repl_password = 'password'
