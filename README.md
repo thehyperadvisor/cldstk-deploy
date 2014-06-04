@@ -17,6 +17,7 @@ CloudStack Deploy is a utility for making Apache CloudStack and KVM  installatio
 - Basic Zone Configuration
 - Web Server on 8080 for template and iso library
 - NTP is now completely synced and configured
+- Installs CloudMonkey
 
 ## Requirements
 
