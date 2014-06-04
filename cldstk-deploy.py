@@ -954,6 +954,7 @@ if __name__ == '__main__':
                         getSystemtemplate('%s' % sys.argv[2].split('=')[1])
                 else:
                         print('Wrong Syntax.....')
+                sys.exit()
 
         passwd = getpass.getpass("Enter Password Here: ")
         if len(sys.argv) == 3 and sys.argv[1] == 'setup':
