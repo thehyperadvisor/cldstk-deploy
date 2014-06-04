@@ -13,6 +13,10 @@ CloudStack Deploy is a utility for making Apache CloudStack and KVM  installatio
 - can install and setup cloudstack-agent KVM hosts
 - can preseed KVM system template
 - can mix options
+- All-In-One Installation
+- Basic Zone Configuration
+- Web Server on 8080 for template and iso library
+- NTP is now completely synced and configured
 
 ## Requirements
 
@@ -34,7 +38,7 @@ CloudStack Deploy is a utility for making Apache CloudStack and KVM  installatio
 
     `python cldstk-deploy.py setup all`
 
-3. Download the Apache Cloudstack RPMS and Systemtemplates using the "get rpmversion=" and "get systemtemplate=" options. 
+3. Download the Apache Cloudstack RPMS and Systemtemplates using the "get rpmversion=" and "get systemtemplate=" options. (OPTIONAL) - if you use "Internet" installation type. 
 
     `python cldstk-deploy.py get rpmversion=4.3`
 
@@ -59,12 +63,35 @@ Browse the **cldstk-deploy** directory then run the command below.
 
 This will start asking questions from the command prompt.
 
+## All-In-One deployment
+
 Next all you have to do is answer the questions. Example shown below.
     
     [root@ansible cldstk-deploy]# python cldstk-deploy.py
     
     Cloudstack Deployment: Answer the questions below....
     
+    Install all-in-one?[Y/n]: y
+    All-in-one Server[dns/ip]: cldstkkvm01
+    Install System Templates?[Y/n]: y
+    NFS Server[dns/ip]: 192.168.78.148
+    NFS Path[/nfsdirpath]: /mnt/volume1/secondary
+    Change install type to "Internet"?[Y/n]: n
+    Change install version to "4.2"?[Y/n]: n
+    Add ssh rsa keys to ~/.ssh/known_hosts?[Y/n]: y
+    ansible hosts file successfully writing to disk.....
+    vars_file successfully writing to disk.....
+    # cldstkkvm01 SSH-2.0-OpenSSH_5.3
+
+## Customized deployment  
+
+Next all you have to do is answer the questions. Example shown below.
+    
+    [root@ansible cldstk-deploy]# python cldstk-deploy.py
+    
+    Cloudstack Deployment: Answer the questions below....
+    
+    Install all-in-one?[Y/n]: n
     Install Primary Database Server?[Y/n]: y
     Db Server[dns/ip]: cldstkdbsrv01
     Configure Database Replica?[Y/n]: y
@@ -83,12 +110,34 @@ Next all you have to do is answer the questions. Example shown below.
     Add ssh rsa keys to ~/.ssh/known_hosts?[Y/n]: y
     ansible hosts file successfully writing to disk.....
     vars_file successfully writing to disk.....
+    Create Basic Zone?[Y/n]: n
     Start installation now?[Y/n]: y
-    SSH password: 
-    
-After you enter your password it's off to the races. If everything goes as planned you'll have all your Apache CloudStack components up and running in no time.
 
-For "All-In-One" installation, you can use the same system name for "Primary Management Server", "Primary DB Server" and "KVM Host".
+## Basic Zone option
+
+    Create Basic Zone?[Y/n]: y
+    Basic Zone Name: MyZone
+    External DNS: 192.168.78.2
+    Internal DNS: 192.168.78.2
+    Gateway: 192.168.78.2
+    NetMask: 255.255.255.0
+    Hypervisor type only support KVM at this time.
+    Pod Name: MyPod
+    Pod Start IP: 192.168.78.200
+    Pod End IP: 192.168.78.210
+    Guest Start IP: 192.168.78.211
+    Guest End IP: 192.168.78.220
+    Cluster Name: MyCluster
+    Host DNS/IP (separated by comma): cldstkkvm01
+    Host User: root
+    Host Password: 
+    Enter the secondary and primary storage mount points.
+    Example: nfs://192.168.78.148/mnt/volume1/secondary
+    Secondary Storage: nfs://192.168.78.148/mnt/volume1/secondary
+    Primary Storage: nfs://192.168.78.148/mnt/volume1/primary  
+    Start installation now?[Y/n]: y
+    
+After you enter 'y' to start the installation it's off to the races. If everything goes as planned you'll have all your Apache CloudStack components up and running in no time.
 
 
 
