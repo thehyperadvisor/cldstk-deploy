@@ -37,6 +37,8 @@ CloudStack Deploy is a utility for making Apache CloudStack and KVM  installatio
 
 2. Setup **cldstk-deploy** using the "setup all" option. This prepares the environment and installs all the required packages for **cldstk-deploy** (nodejs and ansible).
 
+    `cd cldstk-deploy`
+
     `python cldstk-deploy.py setup all`
 
 3. Download the Apache Cloudstack RPMS and Systemtemplates using the "get rpmversion=" and "get systemtemplate=" options. (OPTIONAL) - if you use "Internet" installation type. 
