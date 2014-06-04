@@ -23,9 +23,11 @@ echo export M2_HOME=/usr/local/apache-maven-3.0.5 >> ~/.bashrc \n
 echo export PATH=/usr/local/apache-maven-3.0.5/bin:${PATH} >> ~/.bashrc \n
 wget http://apache.osuosl.org/cloudstack/releases/4.3.0/apache-cloudstack-4.3.0-src.tar.bz2 \n
 tar -jxvf apache-cloudstack-4.3.0-src.tar.bz2 \n
-cd apache-cloudstack-4.3.0-src/packaging/centos63 \n
 source ~/.bashrc \n
-./package.sh
+cd apache-cloudstack-4.3.0-src/deps \n
+./install-non-oss.sh
+cd apache-cloudstack-4.3.0-src/packaging/centos63 \n
+./package.sh# -p noredist
 cd %s/apache-cloudstack-4.3.0-src/dist/rpmbuild/RPMS/x86_64
 createrepo .
 cp -rf * %s/public/cloudstack.apt-get.eu/rhel/4.3

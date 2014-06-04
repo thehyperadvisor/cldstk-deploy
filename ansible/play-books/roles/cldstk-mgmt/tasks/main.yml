@@ -2,6 +2,9 @@
 - name: Stop iptables
   action: service name=iptables state=stopped
 
+- name: Add Cloudstack Repository
+  copy: src="../resources/cloudstack.repo" dest="/etc/yum.repos.d/cloudstack.repo"
+
 - name: Clean yum repositories
   command: yum clean all
 
@@ -15,6 +18,12 @@
 - name: Set SELinux to Permissive
   action: selinux policy=targeted state=permissive
 
+- name: Stop service NTP
+  action: service name=ntpd state=stopped
+
+- name: Update system time
+  command: ntpdate 0.centos.pool.ntp.org
+
 - name: Start service NTP
   action: service name=ntpd state=started
 
@@ -23,9 +32,6 @@
   when: ansible_distribution == 'CentOS'
   # and ansible_lsb.major_release|int == 6
 
-- name: Add Cloudstack Repository
-  copy: src="../resources/cloudstack.repo" dest=/etc/yum.repos.d/cloudstack.repo
-
 - name: Install Cloudstack Management RPMS
   action: yum name={{ item }}
   with_items:
@@ -33,3 +39,7 @@
     - cloudstack-usage
     - cloudstack-awsapi
     - cloudstack-common
+    - java-1.6.0
+
+- name: Add link for mysql-connector-java.jar.
+  action: command ln -s /usr/share/java/mysql-connector-java.jar /usr/share/cloudstack-usage/lib/mysql-connector-java.jar

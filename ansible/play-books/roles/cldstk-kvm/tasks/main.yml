@@ -2,6 +2,9 @@
     - name: Stop iptables
       action: service name=iptables state=stopped
 
+    - name: Add Cloudstack Repository
+      copy: src="../resources/cloudstack.repo" dest=/etc/yum.repos.d/cloudstack.repo
+
     - name: Clean yum repositories
       command: yum clean all
 
@@ -22,6 +25,12 @@
     - name: Set SELinux to Permissive
       action: selinux policy=targeted state=permissive
 
+    - name: Stop service NTP
+      action: service name=ntpd state=stopped
+
+    - name: Update system time
+      command: ntpdate 0.centos.pool.ntp.org
+
     - name: Start service NTP
       action: service name=ntpd state=started enabled=yes
 
@@ -31,9 +40,6 @@
 
     - name: Copy cloudstack-setup-agent.py script to /tmp
       copy: src=cldstk-setup-agent.py dest=/tmp
-
-    - name: Add Cloudstack Repository
-      copy: src="../resources/cloudstack.repo" dest=/etc/yum.repos.d/cloudstack.repo
 
     - name: Install Cloudstack Agent RPMS
       action: yum name={{ item }}

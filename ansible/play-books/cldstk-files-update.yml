@@ -21,20 +21,20 @@
       with_items:
         - libselinux-python
     - name: Update cloudstack.repo file for local install
-      lineinfile: dest='../resources/cloudstack.repo' regexp='^#?baseurl=' 
-                  line="baseurl=http://{{ ansible_default_ipv4.address }}:3000/acs/rpms/{{ repoversion }}/" 
+      lineinfile: dest='../resources/cloudstack.repo' regexp='^#?baseurl='
+                  line="baseurl=http://{{ ansible_default_ipv4.address }}:8080/acs/rpms/{{ repoversion }}/"
                   state=present
       when: repotype == "Local"
-      
+
     - name: Update cloudstack.repo file for internet install
-      lineinfile: dest='../resources/cloudstack.repo' regexp='^#?baseurl=' 
-                  line="baseurl=http://cloudstack.apt-get.eu/rhel/{{ repoversion }}/" 
+      lineinfile: dest='../resources/cloudstack.repo' regexp='^#?baseurl='
+                  line="baseurl=http://cloudstack.apt-get.eu/rhel/{{ repoversion }}/"
                   state=present
       when: repotype == "Internet"
 
     - name: Update cloudstack-systmpl_preseed.yml file for local install
       lineinfile: dest='../vars_file.yml' regexp='^#?systemtemplate'
-                  line='systemtemplate':' http://{{ ansible_default_ipv4.address }}:3000/acs/templates/4.3/systemvm64template-2014-01-14-master-kvm.qcow2.bz2'
+                  line='systemtemplate':' http://{{ ansible_default_ipv4.address }}:8080/acs/templates/4.3/systemvm64template-2014-01-14-master-kvm.qcow2.bz2'
                   state=present
       when: repotype == "Local" and repoversion == 4.3
 
@@ -46,7 +46,7 @@
 
     - name: Update cloudstack-systmpl_preseed.yml file for local install
       lineinfile: dest='../vars_file.yml' regexp='^#?systemtemplate'
-                  line='systemtemplate':' http://{{ ansible_default_ipv4.address }}:3000/acs/templates/4.2/systemvmtemplate-2013-06-12-master-kvm.qcow2.bz2'
+                  line='systemtemplate':' http://{{ ansible_default_ipv4.address }}:8080/acs/templates/4.2/systemvmtemplate-2013-06-12-master-kvm.qcow2.bz2'
                   state=present
       when: repotype == "Local" and repoversion == 4.2
 
@@ -74,10 +74,25 @@
       action: selinux policy=targeted state=permissive
 
     - name: Update /etc/hosts file
-      lineinfile: dest=/etc/hosts 
+      lineinfile: dest=/etc/hosts
                   regexp="^#?{{ hostvars[item]['ansible_default_ipv4']['address'] }} {{ hostvars[item]['ansible_fqdn'] }} {{ hostvars[item]['ansible_hostname'] }}"
-                  line="{{ hostvars[item]['ansible_default_ipv4']['address'] }} {{ hostvars[item]['ansible_fqdn'] }} {{ hostvars[item]['ansible_hostname'] }}" 
+                  line="{{ hostvars[item]['ansible_default_ipv4']['address'] }} {{ hostvars[item]['ansible_fqdn'] }} {{ hostvars[item]['ansible_hostname'] }}"
                   state=present
                   backup=yes
       when: hostvars[item]['ansible_default_ipv4']['address'] is defined
       with_items: ${groups.all}
+     
+    - name: Stop service NTP
+      action: service name=ntpd state=stopped
+
+    - name: Update system time
+      command: ntpdate 0.centos.pool.ntp.org
+
+    - name: Start service NTP
+      action: service name=ntpd state=started
+
+
+
+
+
+
