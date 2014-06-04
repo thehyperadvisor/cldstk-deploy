@@ -81,7 +81,11 @@
                   backup=yes
       when: hostvars[item]['ansible_default_ipv4']['address'] is defined
       with_items: ${groups.all}
+<<<<<<< HEAD
      
+=======
+      
+>>>>>>> FETCH_HEAD
     - name: Stop service NTP
       action: service name=ntpd state=stopped
 
@@ -90,9 +94,12 @@
 
     - name: Start service NTP
       action: service name=ntpd state=started
+<<<<<<< HEAD
 
 
 
 
 
 
+=======
+>>>>>>> FETCH_HEAD
