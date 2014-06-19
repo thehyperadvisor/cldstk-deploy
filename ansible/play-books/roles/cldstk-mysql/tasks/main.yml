@@ -66,7 +66,7 @@
                   host={{ hostvars[item]['ansible_fqdn'] }}
                   password={{ mysql_root_password }}
                   priv=*.*:ALL,GRANT
-      with_items: ${groups.mysql_servers}
+      with_items: groups.mysql_servers
 
     - name: delete anonymous MySQL server user for $server_hostname
       action: mysql_user login_user=root login_password={{ mysql_root_password }} user="" host="$server_hostname" state="absent"
