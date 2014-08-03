@@ -988,6 +988,7 @@ if __name__ == '__main__':
                 if sys.argv[2] == 'api':
                     cloudmonkeyConfig(sys.argv[3])
                 elif sys.argv[2] == 'zone':
+                    createZoneFile()
                     createZone(sys.argv[3])
                 else:
                     print('Wrong Syntax.....')

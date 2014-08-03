@@ -5,7 +5,7 @@ CloudStack Deploy is a utility for making Apache CloudStack and KVM  installatio
 
 ## Features
 
-- can pre download Apache CloudStack RPMS (version 4.2 & 4.3)
+- can pre download Apache CloudStack RPMS (version 4.2, 4.3 & 4.4)
 - can pre download KVM system template
 - runs web server to be used as local RPM and systemtemplate repository
 - can install and setup cloudstack-management servers (One or many)
@@ -43,7 +43,7 @@ CloudStack Deploy is a utility for making Apache CloudStack and KVM  installatio
 
 3. Download the Apache Cloudstack RPMS and Systemtemplates using the "get rpmversion=" and "get systemtemplate=" options. (OPTIONAL) - if you use "Internet" installation type. 
 
-    `python cldstk-deploy.py get rpmversion=4.3`
+    `python cldstk-deploy.py get rpmversion=4.4`
 
 4. (OPTIONAL) Build RPMS from source. ONLY 4.3 for now. ONLY IF YOU DO NOT DOWNLOAD RPMS.
 
@@ -51,9 +51,9 @@ CloudStack Deploy is a utility for making Apache CloudStack and KVM  installatio
 
    Takes roughly 10 minutes to build and installs additional packages.
 
-5. Download KVM system template. Version 4.2 or 4.3 works.
+5. Download KVM system template. Version 4.2, 4.3 or 4.4 works.
 
-   `python cldstk-deploy.py get systemtemplate=4.3`
+   `python cldstk-deploy.py get systemtemplate=4.4`
 
 
 ## Usage Instructions
@@ -80,7 +80,7 @@ Next all you have to do is answer the questions. Example shown below.
     NFS Server[dns/ip]: 192.168.78.148
     NFS Path[/nfsdirpath]: /mnt/volume1/secondary
     Change install type to "Internet"?[Y/n]: n
-    Change install version to "4.2"?[Y/n]: n
+    Which version to install[4.2, 4.3, 4.4]?: 4.4
     Add ssh rsa keys to ~/.ssh/known_hosts?[Y/n]: y
     ansible hosts file successfully writing to disk.....
     vars_file successfully writing to disk.....
@@ -109,7 +109,7 @@ Next all you have to do is answer the questions. Example shown below.
     NFS Server[dns/ip]: labnas01
     NFS Path[/nfsdirpath]: /nfs/secondary
     Change install type to "Internet"?[Y/n]: n
-    Change install version to "4.2"?[Y/n]: n
+    Which version to install[4.2, 4.3, 4.4]?: 4.4
     Add ssh rsa keys to ~/.ssh/known_hosts?[Y/n]: y
     ansible hosts file successfully writing to disk.....
     vars_file successfully writing to disk.....
