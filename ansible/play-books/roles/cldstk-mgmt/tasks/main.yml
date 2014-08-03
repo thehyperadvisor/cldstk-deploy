@@ -23,6 +23,7 @@
 
 - name: Update system time
   command: ntpdate 0.centos.pool.ntp.org
+  ignore_errors: yes
 
 - name: Start service NTP
   action: service name=ntpd state=started
@@ -39,7 +40,8 @@
     - cloudstack-usage
     - cloudstack-awsapi
     - cloudstack-common
-    - java-1.6.0
+    - java-1.7.0
 
 - name: Add link for mysql-connector-java.jar.
   action: command ln -s /usr/share/java/mysql-connector-java.jar /usr/share/cloudstack-usage/lib/mysql-connector-java.jar
+  ignore_errors: yes

@@ -34,6 +34,18 @@
 
     - name: Update cloudstack-systmpl_preseed.yml file for local install
       lineinfile: dest='../vars_file.yml' regexp='^#?systemtemplate'
+                  line='systemtemplate':' http://{{ ansible_default_ipv4.address }}:8080/acs/templates/4.4/systemvm64template-4.4.0-6-kvm.qcow2.bz2'
+                  state=present
+      when: repotype == "Local" and repoversion == 4.4
+
+    - name: Update cloudstack-systmpl_preseed.yml file for local install
+      lineinfile: dest='../vars_file.yml' regexp='^#?systemtemplate'
+                  line='systemtemplate':' http://cloudstack.apt-get.eu/systemvm/4.4/systemvm64template-4.4.0-6-kvm.qcow2.bz2'
+                  state=present
+      when: repotype == "Internet" and repoversion == 4.4
+
+    - name: Update cloudstack-systmpl_preseed.yml file for local install
+      lineinfile: dest='../vars_file.yml' regexp='^#?systemtemplate'
                   line='systemtemplate':' http://{{ ansible_default_ipv4.address }}:8080/acs/templates/4.3/systemvm64template-2014-01-14-master-kvm.qcow2.bz2'
                   state=present
       when: repotype == "Local" and repoversion == 4.3
@@ -87,6 +99,7 @@
 
     - name: Update system time
       command: ntpdate 0.centos.pool.ntp.org
+      ignore_errors: yes
 
     - name: Start service NTP
       action: service name=ntpd state=started

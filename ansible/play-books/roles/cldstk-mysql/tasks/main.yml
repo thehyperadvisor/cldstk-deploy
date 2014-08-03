@@ -19,6 +19,7 @@
 
     - name: Update system time
       command: ntpdate 0.centos.pool.ntp.org
+      ignore_errors: yes
 
     - name: Install NTP
       action: service name=ntpd state=started
@@ -68,7 +69,7 @@
                   priv=*.*:ALL,GRANT
       with_items: groups.mysql_servers
 
-    - name: delete anonymous MySQL server user for $server_hostname
+    - name: deletes anonymous MySQL server user for $server_hostname
       action: mysql_user login_user=root login_password={{ mysql_root_password }} user="" host="$server_hostname" state="absent"
 
     - name: delete anonymous MySQL server user for $ansible_fqdn

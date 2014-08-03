@@ -30,6 +30,7 @@
 
     - name: Update system time
       command: ntpdate 0.centos.pool.ntp.org
+      ignore_errors: yes
 
     - name: Start service NTP
       action: service name=ntpd state=started enabled=yes
