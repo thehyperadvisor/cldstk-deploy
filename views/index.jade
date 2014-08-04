@@ -15,7 +15,7 @@ block content
   h3 Requirements
 
   ul
-    li CentOS 6.4 or .6.5 minimal installation
+    li CentOS 6.4 or 6.5 minimal installation
     li Host resolution must be working for the systems that runs this process
     li Systems must have internet connectivity
 
@@ -25,29 +25,36 @@ block content
   
   p From the root directory type:
   <pre>
-  p python start.py -s
+  p python cldstk-deploy.py -s
   </pre> 
   p This will start the web server so that you can use the web interface.
   br
   h4 Commandline:
   
   <pre>
-  p python start.py
+  p python cldstk-deploy.py
   </pre> 
   p This will start asking questions from the command prompt.
 
   p Next all you have to do is answer the preseeding questions. Example shown below.
 
   <pre>
-  p Install MySQL?[Y/n]: y
-  p Db Server[dns/ip]: cldstkdbsrv01
-  p Install MySQL Replica?[Y/n]: y
-  p Db Replica Server[dns/ip]: cldstkdbsrv02
-  p Install Management Servers?[Y/n]: y
-  p Comma separated list: cldstkwebsrv01,cldstkwebsrv02 
-  p Install KVM Hosts?[Y/n]: y
-  p Comma separated list: cldstkkvm01,cldstkkvm02
-  p SSH password:
+  p [root@ansible cldstk-deploy]# python cldstk-deploy.py
+  p 
+  p Cloudstack Deployment: Answer the questions below....
+  p 
+  p Install all-in-one?[Y/n]: y
+  p All-in-one Server[dns/ip]: cldstkkvm01
+  p Install System Templates?[Y/n]: y
+  p NFS Server[dns/ip]: 192.168.78.148
+  p NFS Path[/nfsdirpath]: /mnt/volume1/secondary
+  p Change install type to "Internet"?[Y/n]: n
+  p Which version to install[4.2, 4.3, 4.4]?: 4.4
+  p Add ssh rsa keys to ~/.ssh/known_hosts?[Y/n]: y
+  p ansible hosts file successfully writing to disk.....
+  p vars_file successfully writing to disk.....
+  p Create Basic Zone?[Y/n]: n
+  p Start installation now?[Y/n]: y
   </pre>
   p After you enter your password it's off to the races. If everything goes as planned you'll have all your Apache CloudStack components up and running in no time.
 

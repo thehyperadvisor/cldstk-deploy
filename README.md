@@ -84,7 +84,8 @@ Next all you have to do is answer the questions. Example shown below.
     Add ssh rsa keys to ~/.ssh/known_hosts?[Y/n]: y
     ansible hosts file successfully writing to disk.....
     vars_file successfully writing to disk.....
-    # cldstkkvm01 SSH-2.0-OpenSSH_5.3
+    Create Basic Zone?[Y/n]: n
+    Start installation now?[Y/n]: y
 
 ## Customized deployment  
 
