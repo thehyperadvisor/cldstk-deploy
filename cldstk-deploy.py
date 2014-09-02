@@ -734,11 +734,6 @@ def main():
             else:
                     db_master = ''
 
-            if installmysql.lower() == 'n':
-                    db_primary = raw_input('Whats the current DB Server?[dns/ip]: ')
-            else:
-                    db_primary = ''
-
             installmysqlreplica = ''
             while installmysqlreplica.lower() != 'y' and installmysqlreplica.lower() != 'n':
                     installmysqlreplica = raw_input('Configure Database Replica?[Y/n]: ')
@@ -765,6 +760,11 @@ def main():
                     cldstk_web = raw_input('Comma separated list: ')
             else:
                     cldstk_web = ''
+
+            if installmysql.lower() == 'n' and installmgmtsrv == 'y' or installwebsrv == 'y' or installmysqlreplica.lower() == 'y':
+                    db_primary = raw_input('Whats the current DB Server?[dns/ip]: ')
+            else:
+                    db_primary = ''
 
             installkvmhost = ''
             while installkvmhost.lower() != 'y' and installkvmhost.lower() != 'n':
