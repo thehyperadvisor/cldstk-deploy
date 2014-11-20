@@ -21,7 +21,7 @@ CloudStack Deploy is a utility for making Apache CloudStack and KVM  installatio
 
 ## Requirements
 
-- CentOS 6.4 or above
+- CentOS 6.4 or above (**not compatible with CentOS 7**)
 - Systems must have internet connectivity
 - Host resolution must be working for the systems that runs this process
 
