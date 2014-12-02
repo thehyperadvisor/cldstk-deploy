@@ -364,8 +364,8 @@ def getRPMS(repo):
                 call(["rm","-rf", "4.4"], shell=False)
                 call(["wget","https://dl.dropboxusercontent.com/u/3904598/cloudstack-4.4.2-rpms.tar.gz"], shell=False)
                 #call(["wget","https://www.dropbox.com/sh/7fa1j6ymap1wrgu/AADUA9LjHSnXLJmwQ7rf3WjKa/cloudstack-4.4.0-rpms.tar.gz"], shell=False)
-                call(["tar","-zxvf", "cloudstack-4.4.0-rpms.tar.gz"], shell=False)
-                call(["rm -f cloudstack-4.4.0-rpms.tar.*"], shell=True)
+                call(["tar","-zxvf", "cloudstack-4.4.2-rpms.tar.gz"], shell=False)
+                call(["rm -f cloudstack-4.4.2-rpms.tar.*"], shell=True)
         if repo == '4.3':
                 os.chdir(savedHome + '/public/cloudstack.apt-get.eu/rhel/')
                 call(["rm","-rf", "4.3"], shell=False)
