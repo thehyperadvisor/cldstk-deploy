@@ -312,6 +312,7 @@ def cloudmonkeyConfig(api_srv):
 def setUp():
         call(["rpm","-Uvh", "http://mirror.pnl.gov/epel/6/x86_64/epel-release-6-8.noarch.rpm"], shell=False)
         call(["yum","install", "wget", "-y"], shell=False)
+        call(["yum","install", "sshpass", "-y"], shell=False)
         call(["yum","install", "python-setuptools", "-y"], shell=False)
         call(["yum","install", "ansible", "-y"], shell=False)
         call(["yum","install", "nodejs", "-y"], shell=False)
@@ -361,7 +362,8 @@ def getRPMS(repo):
         if repo == '4.4':
                 os.chdir(savedHome + '/public/cloudstack.apt-get.eu/rhel/')
                 call(["rm","-rf", "4.4"], shell=False)
-                call(["wget","https://www.dropbox.com/sh/7fa1j6ymap1wrgu/AADUA9LjHSnXLJmwQ7rf3WjKa/cloudstack-4.4.0-rpms.tar.gz"], shell=False)
+                call(["wget","https://dl.dropboxusercontent.com/u/3904598/cloudstack-4.4.2-rpms.tar.gz"], shell=False)
+                #call(["wget","https://www.dropbox.com/sh/7fa1j6ymap1wrgu/AADUA9LjHSnXLJmwQ7rf3WjKa/cloudstack-4.4.0-rpms.tar.gz"], shell=False)
                 call(["tar","-zxvf", "cloudstack-4.4.0-rpms.tar.gz"], shell=False)
                 call(["rm -f cloudstack-4.4.0-rpms.tar.*"], shell=True)
         if repo == '4.3':
@@ -761,7 +763,7 @@ def main():
             else:
                     cldstk_web = ''
 
-            if installmysql.lower() == 'n' and installmgmtsrv == 'y' or installwebsrv == 'y' or installmysqlreplica.lower() == 'y':
+            if installmysql.lower() == 'n' and installmgmtsrv == 'y' or installwebsrv == 'y' and installmysql.lower() == 'n' or installmysqlreplica.lower() == 'y' and installmysql.lower() == 'n':
                     db_primary = raw_input('Whats the current DB Server?[dns/ip]: ')
             else:
                     db_primary = ''
