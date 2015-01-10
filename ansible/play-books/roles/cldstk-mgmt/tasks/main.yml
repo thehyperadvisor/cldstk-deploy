@@ -2,9 +2,6 @@
 - name: Stop iptables
   action: service name=iptables state=stopped
 
-- name: Add Cloudstack Repository
-  copy: src="../resources/cloudstack.repo" dest="/etc/yum.repos.d/cloudstack.repo"
-
 - name: Clean yum repositories
   command: yum clean all
 
@@ -14,6 +11,9 @@
     - libselinux-python
     - ntp
     - mysql
+
+- name: Add Cloudstack Repository
+  copy: src="../resources/cloudstack.repo" dest="/etc/yum.repos.d/cloudstack.repo"
 
 - name: Set SELinux to Permissive
   action: selinux policy=targeted state=permissive

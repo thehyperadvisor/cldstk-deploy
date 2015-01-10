@@ -844,124 +844,124 @@ def main():
 
 
         # Write the /etc/ansible/hosts file
-        if len(db_master) != 0 or len(db_primary) !=0:
-                hostsfile = open('./ansible/hosts','w')
-                hostsfile.write('[localhost]\n127.0.0.1\n\n')
-                
-                hostsfile.write('[db_master]\n')
-                if len(db_master) != 0:
-                        hostsfile.write('%s\n' % db_master)
-                        systemlist.append('%s' % db_master)
-                else:
-                        hostsfile.write('%s\n' % db_primary)
-                        systemlist.append('%s' % db_primary)
+        #if installmysql.lower() == 'n' and len(db_master) != 0 or installmysql.lower() == 'n' and len(db_primary) !=0:
+        hostsfile = open('./ansible/hosts','w')
+        hostsfile.write('[localhost]\n127.0.0.1\n\n')
+        
+        hostsfile.write('[db_master]\n')
+        if len(db_master) != 0:
+                hostsfile.write('%s\n' % db_master)
+                systemlist.append('%s' % db_master)
+        else:
+                hostsfile.write('%s\n' % db_primary)
+                systemlist.append('%s' % db_primary)
 
-                hostsfile.write('\n[db_slave]\n')
-                if len(db_slave) != 0:
-                        hostsfile.write('%s\n' % db_slave)
-                        systemlist.append('%s' % db_slave)
+        hostsfile.write('\n[db_slave]\n')
+        if len(db_slave) != 0:
+                hostsfile.write('%s\n' % db_slave)
+                systemlist.append('%s' % db_slave)
 
-                hostsfile.write('\n[mysql_servers]\n')
-                if len(db_master) != 0:
-                        hostsfile.write('%s\n' % db_master)
-                        systemlist.append('%s' % db_master)
-                if len(db_slave) != 0:
-                        hostsfile.write('%s\n' % db_slave)
-                        systemlist.append('%s' % db_slave)
+        hostsfile.write('\n[mysql_servers]\n')
+        if len(db_master) != 0:
+                hostsfile.write('%s\n' % db_master)
+                systemlist.append('%s' % db_master)
+        if len(db_slave) != 0:
+                hostsfile.write('%s\n' % db_slave)
+                systemlist.append('%s' % db_slave)
 
-                hostsfile.write('\n[cldstk_mgmt]\n')
-                if len(cldstk_mgmt) != 0:
-                        cldstk_mgmt = cldstk_mgmt.split(',')[0]
-                        hostsfile.write('%s\n' % cldstk_mgmt)
-                        systemlist.append('%s' % cldstk_mgmt)
+        hostsfile.write('\n[cldstk_mgmt]\n')
+        if len(cldstk_mgmt) != 0:
+                cldstk_mgmt = cldstk_mgmt.split(',')[0]
+                hostsfile.write('%s\n' % cldstk_mgmt)
+                systemlist.append('%s' % cldstk_mgmt)
 
-                hostsfile.write('\n[cldstk_web]\n')
-                if len(cldstk_web) != 0:
-                        cldstk_web = cldstk_web.split(',')
-                        for w in cldstk_web:
-                                hostsfile.write('%s\n' % w.strip())
-                                systemlist.append('%s' % w.strip())
+        hostsfile.write('\n[cldstk_web]\n')
+        if len(cldstk_web) != 0:
+                cldstk_web = cldstk_web.split(',')
+                for w in cldstk_web:
+                        hostsfile.write('%s\n' % w.strip())
+                        systemlist.append('%s' % w.strip())
 
-                hostsfile.write('\n[cldstk_kvm]\n')
-                if len(cldstk_kvmhost) != 0:
-                        cldstk_kvmhost = cldstk_kvmhost.split(',')
-                        for k in cldstk_kvmhost:
-                                hostsfile.write('%s\n' % k.strip())
-                                systemlist.append('%s' % k.strip())
+        hostsfile.write('\n[cldstk_kvm]\n')
+        if len(cldstk_kvmhost) != 0:
+                cldstk_kvmhost = cldstk_kvmhost.split(',')
+                for k in cldstk_kvmhost:
+                        hostsfile.write('%s\n' % k.strip())
+                        systemlist.append('%s' % k.strip())
 
-                hostsfile.write('\n[mgmt_restart]\n')
-                if len(mgmtrestart) != 0:
-                        mgmt_restart = mgmtrestart.split(',')
-                        for w in mgmt_restart:
-                                hostsfile.write('%s\n' % w.strip())
-                                systemlist.append('%s' % w.strip())
+        hostsfile.write('\n[mgmt_restart]\n')
+        if len(mgmtrestart) != 0:
+                mgmt_restart = mgmtrestart.split(',')
+                for w in mgmt_restart:
+                        hostsfile.write('%s\n' % w.strip())
+                        systemlist.append('%s' % w.strip())
 
-                hostsfile.close()
-                print('ansible hosts file successfully writing to disk.....')
+        hostsfile.close()
+        print('ansible hosts file successfully writing to disk.....')
 
-                # Write the vars_file.yml file
-                if len(db_master) != 0:
-                        vars_file = open('./ansible/vars_file.yml','w')
-                        vars_file.write('mgmt_primary: %s\n' % cldstk_mgmt)
-                        vars_file.write('master: %s\n' % db_master)
-                        vars_file.write('slave: %s\n' % db_slave)
-                        vars_file.write('cloud_repl_password: %s\n' % cloud_repl_password)
-                        vars_file.write('mysql_root_password: %s\n' % mysql_root_password)
-                        vars_file.write('nfs_server: %s\n' % nfs_server)
-                        vars_file.write('nfs_path: %s\n' % nfs_path)
-                        vars_file.write('repotype: %s\n' % repo_type)
-                        vars_file.write('repoversion: %s\n' % repo_version)
-                        vars_file.write('systemtemplate: %s\n' % system_template)
-                        vars_file.close()
-                else:
-                        vars_file = open('./ansible/vars_file.yml','w')
-                        vars_file.write('mgmt_primary: %s\n' % cldstk_mgmt)
-                        vars_file.write('master: %s\n' % db_primary)
-                        vars_file.write('slave: %s\n' % db_slave)
-                        vars_file.write('cloud_repl_password: %s\n' % cloud_repl_password)
-                        vars_file.write('mysql_root_password: %s\n' % mysql_root_password)
-                        vars_file.write('nfs_server: %s\n' % nfs_server)
-                        vars_file.write('nfs_path: %s\n' % nfs_path)
-                        vars_file.write('repotype: %s\n' % repo_type)
-                        vars_file.write('repoversion: %s\n' % repo_version)
-                        vars_file.write('systemtemplate: %s\n' % system_template)
-                        vars_file.close()
+        # Write the vars_file.yml file
+        if len(db_master) != 0:
+                vars_file = open('./ansible/vars_file.yml','w')
+                vars_file.write('mgmt_primary: %s\n' % cldstk_mgmt)
+                vars_file.write('master: %s\n' % db_master)
+                vars_file.write('slave: %s\n' % db_slave)
+                vars_file.write('cloud_repl_password: %s\n' % cloud_repl_password)
+                vars_file.write('mysql_root_password: %s\n' % mysql_root_password)
+                vars_file.write('nfs_server: %s\n' % nfs_server)
+                vars_file.write('nfs_path: %s\n' % nfs_path)
+                vars_file.write('repotype: %s\n' % repo_type)
+                vars_file.write('repoversion: %s\n' % repo_version)
+                vars_file.write('systemtemplate: %s\n' % system_template)
+                vars_file.close()
+        else:
+                vars_file = open('./ansible/vars_file.yml','w')
+                vars_file.write('mgmt_primary: %s\n' % cldstk_mgmt)
+                vars_file.write('master: %s\n' % db_primary)
+                vars_file.write('slave: %s\n' % db_slave)
+                vars_file.write('cloud_repl_password: %s\n' % cloud_repl_password)
+                vars_file.write('mysql_root_password: %s\n' % mysql_root_password)
+                vars_file.write('nfs_server: %s\n' % nfs_server)
+                vars_file.write('nfs_path: %s\n' % nfs_path)
+                vars_file.write('repotype: %s\n' % repo_type)
+                vars_file.write('repoversion: %s\n' % repo_version)
+                vars_file.write('systemtemplate: %s\n' % system_template)
+                vars_file.close()
 
-                print('vars_file successfully writing to disk.....')
+        print('vars_file successfully writing to disk.....')
 
 
-                # Add systems ssh rsa keys to ~/.ssh/known_hosts file
-                if addrsakeys == 'True':
-                        uniquesys = []
-                        for system in systemlist:
-                                if system not in uniquesys:
-                                        uniquesys.append(system)
-                                        call(["ssh-keyscan -H '%s' >> ~/.ssh/known_hosts" % system], shell=True)
-                                else: pass
-                else: pass
+        # Add systems ssh rsa keys to ~/.ssh/known_hosts file
+        if addrsakeys == 'True':
+                uniquesys = []
+                for system in systemlist:
+                        if system not in uniquesys:
+                                uniquesys.append(system)
+                                call(["ssh-keyscan -H '%s' >> ~/.ssh/known_hosts" % system], shell=True)
+                        else: pass
+        else: pass
 
-                create_zone = raw_input('Create Basic Zone?[Y/n]: ')
+        create_zone = raw_input('Create Basic Zone?[Y/n]: ')
+
+        if create_zone.lower() == 'y':
+            createZoneFile()
+        else:
+                print('No Basic Zone will be created')
+
+        startinstallation = raw_input('Start installation now?[Y/n]: ')
+
+        if startinstallation.lower() == 'y':
+                startall()
 
                 if create_zone.lower() == 'y':
-                    createZoneFile()
-                else:
-                        print('No Basic Zone will be created')
-
-                startinstallation = raw_input('Start installation now?[Y/n]: ')
-
-                if startinstallation.lower() == 'y':
-                        startall()
-
-                        if create_zone.lower() == 'y':
-                            runAllwithZone()
-
-                else:
-                        print('Exiting program......')
-                        sys.exit()
+                    runAllwithZone()
 
         else:
-                print('You must provide the Master Database Server...')
-                main()
+                print('Exiting program......')
+                sys.exit()
+
+        #else:
+        #        print('You must provide the Master Database Server...')
+        #        main()
 
 if __name__ == '__main__':
         if len(sys.argv) == 2 and sys.argv[1] == '-s':
