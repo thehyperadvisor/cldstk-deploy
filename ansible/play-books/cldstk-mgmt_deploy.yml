@@ -25,6 +25,12 @@
     - name: Set cloudstack-management to start at boot time
       action: command chkconfig cloudstack-management on
 
+    - name: Start cloudstack-management service
+      action: service name=cloudstack-usage state=started
+
+    - name: Set cloudstack-usage to start at boot time
+      action: command chkconfig cloudstack-usage on
+
     - name: Set ntp to start at boot time
       action: command chkconfig ntpd on
 
@@ -50,6 +56,14 @@
 
     - name: Set cloudstack-management to start at boot time
       action: command chkconfig cloudstack-management on
+      when: mgmt_primary != '{{ ansible_hostname }}' and mgmt_primary != '{{ ansible_fqdn }}'
+
+    - name: Start cloudstack-usage service
+      action: service name=cloudstack-usage state=started
+      when: mgmt_primary != '{{ ansible_hostname }}' and mgmt_primary != '{{ ansible_fqdn }}'
+
+    - name: Set cloudstack-usage to start at boot time
+      action: command chkconfig cloudstack-usage on
       when: mgmt_primary != '{{ ansible_hostname }}' and mgmt_primary != '{{ ansible_fqdn }}'
 
     - name: Set ntp to start at boot time

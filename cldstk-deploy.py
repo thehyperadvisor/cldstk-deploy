@@ -359,6 +359,13 @@ def setUp():
 # Downloads the rpms for CloudStack to be used for a "local" install
 def getRPMS(repo):
         # Download rpm packages from remote repository
+        if repo == '4.5':
+                os.chdir(savedHome + '/public/cloudstack.apt-get.eu/rhel/')
+                call(["rm","-rf", "4.5"], shell=False)
+                call(["wget","https://dl.dropboxusercontent.com/u/3904598/cloudstack-4.5.1-rpms.tar.gz"], shell=False)
+                #call(["wget","https://www.dropbox.com/sh/7fa1j6ymap1wrgu/AADUA9LjHSnXLJmwQ7rf3WjKa/cloudstack-4.4.0-rpms.tar.gz"], shell=False)
+                call(["tar","-zxvf", "cloudstack-4.5.1-rpms.tar.gz"], shell=False)
+                call(["rm -f cloudstack-4.5.1-rpms.tar.*"], shell=True)
         if repo == '4.4':
                 os.chdir(savedHome + '/public/cloudstack.apt-get.eu/rhel/')
                 call(["rm","-rf", "4.4"], shell=False)
@@ -383,6 +390,13 @@ def getRPMS(repo):
 # Downloads the systemtemplates for CloudStack to be used to preseed secondary storage
 def getSystemtemplate(repo):
         # Download rpm packages from remote repository
+        if repo == '4.5':
+                if not os.path.exists(savedHome + '/public/templates/4.5/'): os.makedirs(savedHome + '/public/templates/4.5/')
+                os.chdir(savedHome + '/public/templates/4.5/')
+                call(["wget","http://packages.shapeblue.com/systemvmtemplate/4.5/systemvm64template-4.5-kvm.qcow2.bz2"], shell=False)
+                #call(["wget","http://download.cloud.com/templates/4.3/systemvm64template-2014-01-14-master-xen.vhd.bz2"], shell=False)
+                #call(["wget","http://download.cloud.com/templates/4.3/systemvm64template-2014-01-14-master-vmware.ova"], shell=False)
+                os.chdir(savedHome)
         if repo == '4.4':
                 if not os.path.exists(savedHome + '/public/templates/4.4/'): os.makedirs(savedHome + '/public/templates/4.4/')
                 os.chdir(savedHome + '/public/templates/4.4/')
@@ -570,6 +584,7 @@ def systemtemplate_Install():
         for l in playoutput:print l,playoutput[l]
 
 def createZoneFile():
+        #mgmtname = ''
         zname = ''
         podname = ''
         clus_name = ''
@@ -588,6 +603,8 @@ def createZoneFile():
         sec_storage=''
         prm_storage=''
 
+        #while mgmtname.lower() == '':
+        #    mgmtname = raw_input('Management Server: ')
         while zname.lower() == '':
             zname = raw_input('Basic Zone Name: ')
         while dns_ext.lower() == '':
@@ -809,14 +826,14 @@ def main():
                 repo_type = 'Local'
 
         changerepoversion = ''
-        while changerepoversion.lower() != '4.2' and changerepoversion.lower() != '4.3' and changerepoversion.lower() != '4.4':
-                changerepoversion = raw_input('Which version to install[4.2, 4.3, 4.4]?: ')
-        if changerepoversion.lower() == '4.2':
-                repo_version = '4.2'
-        elif changerepoversion.lower() == '4.3':
+        while changerepoversion.lower() != '4.2' and changerepoversion.lower() != '4.3' and changerepoversion.lower() != '4.4' and changerepoversion.lower() != '4.5':
+                changerepoversion = raw_input('Which version to install[4.3, 4.4, 4.5]?: ')
+        if changerepoversion.lower() == '4.3':
                 repo_version = '4.3'
-        else:
+        elif changerepoversion.lower() == '4.4':
                 repo_version = '4.4'
+        else:
+                repo_version = '4.5'
 
         ssh_addrsakeys = ''
         systemlist = []
@@ -829,12 +846,16 @@ def main():
 
 
         system_template = ''
+        if repo_version == '4.5' and repo_type == 'Local':
+                system_template = 'http://%s:8080/acs/templates/4.5/systemvm64template-4.5-kvm.qcow2.bz2' % eth_ip
         if repo_version == '4.4' and repo_type == 'Local':
                 system_template = 'http://%s:8080/acs/templates/4.4/systemvm64template-4.4.0-6-kvm.qcow2.bz2' % eth_ip
         if repo_version == '4.3' and repo_type == 'Local':
                 system_template = 'http://%s:8080/acs/templates/4.3/systemvm64template-2014-01-14-master-kvm.qcow2.bz2' % eth_ip
         if repo_version == '4.2' and repo_type == 'Local':
                 system_template = 'http://%s:8080/acs/templates/4.2/systemvmtemplate-2013-06-12-master-kvm.qcow2.bz2' % eth_ip
+        if repo_version == '4.5' and repo_type == 'Internet':
+                system_template = 'http://packages.shapeblue.com/systemvmtemplate/4.5/systemvm64template-4.5-kvm.qcow2.bz2'
         if repo_version == '4.4' and repo_type == 'Internet':
                 system_template = 'http://cloudstack.apt-get.eu/systemvm/4.4/systemvm64template-4.4.0-6-kvm.qcow2.bz2'
         if repo_version == '4.3' and repo_type == 'Internet':
