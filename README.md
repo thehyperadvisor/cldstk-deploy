@@ -45,7 +45,7 @@ CloudStack Deploy is a utility for making Apache CloudStack and KVM  installatio
 
     `python cldstk-deploy.py get rpmversion=4.5`
 
-4. (OPTIONAL) Build RPMS from source. ONLY 4.3 & 4.5 for now. ONLY IF YOU DO NOT DOWNLOAD RPMS.
+4. (OPTIONAL) Build RPMS from source. ONLY 4.3, 4.4 & 4.5 for now. ONLY IF YOU DO NOT DOWNLOAD RPMS.
 
     `python build-4.5.x-rpms.py`
 
