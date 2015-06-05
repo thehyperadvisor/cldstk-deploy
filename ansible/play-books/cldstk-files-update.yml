@@ -58,15 +58,15 @@
 
     - name: Update cloudstack-systmpl_preseed.yml file for local install
       lineinfile: dest='../vars_file.yml' regexp='^#?systemtemplate'
-                  line='systemtemplate':' http://{{ ansible_default_ipv4.address }}:8080/acs/templates/4.2/systemvmtemplate-2013-06-12-master-kvm.qcow2.bz2'
+                  line='systemtemplate':' http://{{ ansible_default_ipv4.address }}:8080/acs/templates/4.5/systemvm64template-4.5-kvm.qcow2.bz2'
                   state=present
-      when: repotype == "Local" and repoversion == 4.2
+      when: repotype == "Local" and repoversion == 4.5
 
     - name: Update cloudstack-systmpl_preseed.yml file for local install
       lineinfile: dest='../vars_file.yml' regexp='^#?systemtemplate'
-                  line='systemtemplate':' http://download.cloud.com/templates/4.2/systemvmtemplate-2013-06-12-master-kvm.qcow2.bz2'
+                  line='systemtemplate':' http://packages.shapeblue.com/systemvmtemplate/4.5/systemvm64template-4.5-kvm.qcow2.bz2'
                   state=present
-      when: repotype == "Internet" and repoversion == 4.2
+      when: repotype == "Internet" and repoversion == 4.5
 
 
 
