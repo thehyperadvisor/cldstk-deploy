@@ -1,28 +1,31 @@
 cldstk-deploy
 =============
 
-CloudStack Deploy is a utility for making Apache CloudStack and KVM  installations quick, easy and painless. Meant to be reusable so you can deploy Apache CloudStack more than once after you've downloaded the RPMS and systemtemplates locally with cldstk-deploy.
+cldstk-deploy is a utility for making Apache CloudStack and KVM  installations quick, easy and painless. Meant to be reusable so you can deploy Apache CloudStack more than once after you’ve downloaded the RPMS and system templates locally with cldstk-deploy.
 
 ## Features
 
+- can install NFS server ****New****
+- cldstk-deploy now creates jobs for each deploy ****New****
+- cldstk-deploy now has help using -h
 - can pre download Apache CloudStack RPMS (version 4.3, 4.4 & 4.5)
 - can pre download KVM system template
-- runs web server to be used as local RPM and systemtemplate repository
+- runs web server to be used as ISO, RPM and system template repository
 - can install and setup cloudstack-management servers (One or many)
 - can install and setup mysql database servers (Primary and Repica)
 - can install and setup cloudstack-agent KVM hosts
 - can preseed KVM system template
 - can mix options
 - All-In-One Installation
-- Basic Zone Configuration
-- Web Server on 8080 for template and iso library
-- NTP is now completely synced and configured
+- Basic Zone Configuration setup after deployment
+- configures NTP
 - Installs CloudMonkey
 
 ## Requirements
 
 - CentOS 6.4 or above (**not compatible with CentOS 7**)
-- Systems must have internet connectivity
+- Mac OSX support ****New**** (tested on 10.10.3 and higher)
+- Systems must have internet connectivity (this just make sense)
 - Host resolution must be working for the systems that runs this process
 
 # Getting Started
@@ -35,34 +38,29 @@ CloudStack Deploy is a utility for making Apache CloudStack and KVM  installatio
 
     `git clone https://github.com/thehyperadvisor/cldstk-deploy.git`
 
-2. Setup **cldstk-deploy** using the "setup all" option. This prepares the environment and installs all the required packages for **cldstk-deploy** (nodejs and ansible).
+2. Setup **cldstk-deploy** using the “setup all” option. This prepares the environment and installs all the required packages for **cldstk-deploy** (python and ansible).
 
     `cd cldstk-deploy`
 
-    `python cldstk-deploy.py setup all`
+    `python cldstkdeploy.py --setup all`
 
-3. Download the Apache Cloudstack RPMS and Systemtemplates using the "get rpmversion=" and "get systemtemplate=" options. (OPTIONAL) - if you use "Internet" installation type. 
+3. Download the Apache Cloudstack RPMS and Systemtemplates all at once. (OPTIONAL) - if you use “Internet” installation type. 
 
-    `python cldstk-deploy.py get rpmversion=4.5`
+    `python cldstkdeploy.py --getall 4.5`
 
-4. (OPTIONAL) Build RPMS from source. ONLY 4.3 & 4.5 for now. ONLY IF YOU DO NOT DOWNLOAD RPMS.
+4. (OPTIONAL) Build RPMS from source. ONLY 4.3, 4.4 & 4.5 for now. ONLY IF YOU DO NOT DOWNLOAD RPMS.
 
     `python build-4.5.x-rpms.py`
 
    Takes roughly 10 minutes to build and installs additional packages.
 
-5. Download KVM system template. Version 4.3, 4.4 or 4.5 works.
-
-   `python cldstk-deploy.py get systemtemplate=4.5`
-
-
 ## Usage Instructions
 
-RPM packages and system templates must be in downloaded first when NOT using the "Internet" installation type.
+RPM packages and system templates must be in downloaded first when NOT using the “Internet” installation type.
 
 Browse the **cldstk-deploy** directory then run the command below. 
 
-    python cldstk-deploy.py
+    python cldstkdeploy.py
 
 This will start asking questions from the command prompt.
 
@@ -70,51 +68,57 @@ This will start asking questions from the command prompt.
 
 Next all you have to do is answer the questions. Example shown below.
     
-    [root@ansible cldstk-deploy]# python cldstk-deploy.py
+    [root@centos cldstk-deploy]# python cldstkdeploy.py
     
-    Cloudstack Deployment: Answer the questions below....
+    Cloudstack Deployment: Answer the questions below….
     
     Install all-in-one?[Y/n]: y
-    All-in-one Server[dns/ip]: cldstkkvm01
+    All-in-one Server[dns/ip]: 192.168.0.29
     Install System Templates?[Y/n]: y
-    NFS Server[dns/ip]: 192.168.78.148
-    NFS Path[/nfsdirpath]: /mnt/volume1/secondary
     Change install type to "Internet"?[Y/n]: n
-    Which version to install[4.3, 4.4, 4.5]?: 4.5
+    Which version to install ['4.3', '4.4', '4.5']?: 4.5
     Add ssh rsa keys to ~/.ssh/known_hosts?[Y/n]: y
+    jobid: 2015-07-06-22-17-45165765
     ansible hosts file successfully writing to disk.....
     vars_file successfully writing to disk.....
+    # 192.168.0.29 SSH-2.0-OpenSSH_5.3
     Create Basic Zone?[Y/n]: n
+    No Basic Zone will be created
     Start installation now?[Y/n]: y
 
 ## Customized deployment  
 
 Next all you have to do is answer the questions. Example shown below.
     
-    [root@ansible cldstk-deploy]# python cldstk-deploy.py
+    [root@centos cldstk-deploy]# python cldstkdeploy.py
     
-    Cloudstack Deployment: Answer the questions below....
+    Cloudstack Deployment: Answer the questions below….
     
     Install all-in-one?[Y/n]: n
     Install Primary Database Server?[Y/n]: y
-    Db Server[dns/ip]: cldstkdbsrv01
-    Configure Database Replica?[Y/n]: y
-    DB Replica Server[dns/ip]: cldstkdbsrv02
+    Db Server[dns/ip]: 192.168.0.20
+    Configure Database Replica?[Y/n]: n
     Install Primary Management Server?[Y/n]: y
-    Server[dns/ip]: cldstkwebsrv01
-    Install additional Management servers?[Y/n]: y             
-    Comma separated list: cldstkwebsrv02,cldstkwebsrv03
+    Server[dns/ip]: 192.168.0.30
+    Install additional Management servers?[Y/n]: n
     Install KVM Hosts?[Y/n]: y
-    Comma separated list: cldstkkvm01,cldstkkvm02
+    Comma separated list: 192.168.0.40,192.168.0.41
     Install System Templates?[Y/n]: y
-    NFS Server[dns/ip]: labnas01
-    NFS Path[/nfsdirpath]: /nfs/secondary
+    NFS Server[dns/ip]: 192.168.0.50
+    NFS Secondary Storage Path[/nfsdirpath]: /secondary
     Change install type to "Internet"?[Y/n]: n
-    Which version to install[4.3, 4.4, 4.5]?: 4.5
+    Which version to install ['4.3', '4.4', '4.5']?: 4.5
     Add ssh rsa keys to ~/.ssh/known_hosts?[Y/n]: y
+    jobid: 2015-07-06-22-28-34672160
     ansible hosts file successfully writing to disk.....
     vars_file successfully writing to disk.....
+    # 192.168.0.20 SSH-2.0-OpenSSH_5.3
+    # 192.168.0.30 SSH-2.0-OpenSSH_5.3
+    # 192.168.0.40 SSH-2.0-OpenSSH_5.3
+    # 192.168.0.41 SSH-2.0-OpenSSH_5.3
+    # 192.168.0.50 SSH-2.0-OpenSSH_5.3
     Create Basic Zone?[Y/n]: n
+    No Basic Zone will be created
     Start installation now?[Y/n]: y
 
 ## Basic Zone option
@@ -141,10 +145,4 @@ Next all you have to do is answer the questions. Example shown below.
     Primary Storage: nfs://192.168.78.148/mnt/volume1/primary  
     Start installation now?[Y/n]: y
     
-After you enter 'y' to start the installation it's off to the races. If everything goes as planned you'll have all your Apache CloudStack components up and running in no time.
-
-
-
-
-
-
+After you enter ‘y’ to start the installation it’s off to the races. If everything goes as planned you’ll have all your Apache CloudStack components up and running in no time.
