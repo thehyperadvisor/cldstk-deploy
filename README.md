@@ -24,7 +24,7 @@ cldstk-deploy is a utility for making Apache CloudStack and KVM  installations q
 ## Requirements
 
 - CentOS 6.4 or above (**not compatible with CentOS 7**)
-- Mac OSX support ****New**** (tested on 10.10.3 and higher)
+- Mac OS X support ****New**** (tested on 10.10.3 and higher)
 - Systems must have internet connectivity (this just make sense)
 - Host resolution must be working for the systems that runs this process
 
@@ -34,19 +34,27 @@ cldstk-deploy is a utility for making Apache CloudStack and KVM  installations q
 
 1. Download **cldstk-deploy** from Github. 
 
+    **On CentOS**:
+    
     `yum install git -y`
 
     `git clone https://github.com/thehyperadvisor/cldstk-deploy.git`
 
+    **On Mac OSX**:
+    
+    Download cldstk-deploy from [here](https://github.com/thehyperadvisor/cldstk-deploy/archive/master.zip)
+    
+    Double click the download to unpack.
+    
 2. Setup **cldstk-deploy** using the “setup all” option. This prepares the environment and installs all the required packages for **cldstk-deploy** (python and ansible).
 
     `cd cldstk-deploy`
 
-    `python cldstkdeploy.py --setup all`
+    `python cldstkdeploy.py —setup all`
 
 3. Download the Apache Cloudstack RPMS and Systemtemplates all at once. (OPTIONAL) - if you use “Internet” installation type. 
 
-    `python cldstkdeploy.py --getall 4.5`
+    `python cldstkdeploy.py —getall 4.5`
 
 4. (OPTIONAL) Build RPMS from source. ONLY 4.3, 4.4 & 4.5 for now. ONLY IF YOU DO NOT DOWNLOAD RPMS.
 
@@ -75,12 +83,12 @@ Next all you have to do is answer the questions. Example shown below.
     Install all-in-one?[Y/n]: y
     All-in-one Server[dns/ip]: 192.168.0.29
     Install System Templates?[Y/n]: y
-    Change install type to "Internet"?[Y/n]: n
-    Which version to install ['4.3', '4.4', '4.5']?: 4.5
+    Change install type to “Internet”?[Y/n]: n
+    Which version to install [‘4.3’, ‘4.4’, ‘4.5’]?: 4.5
     Add ssh rsa keys to ~/.ssh/known_hosts?[Y/n]: y
     jobid: 2015-07-06-22-17-45165765
-    ansible hosts file successfully writing to disk.....
-    vars_file successfully writing to disk.....
+    ansible hosts file successfully writing to disk…..
+    vars_file successfully writing to disk…..
     # 192.168.0.29 SSH-2.0-OpenSSH_5.3
     Create Basic Zone?[Y/n]: n
     No Basic Zone will be created
@@ -106,12 +114,12 @@ Next all you have to do is answer the questions. Example shown below.
     Install System Templates?[Y/n]: y
     NFS Server[dns/ip]: 192.168.0.50
     NFS Secondary Storage Path[/nfsdirpath]: /secondary
-    Change install type to "Internet"?[Y/n]: n
-    Which version to install ['4.3', '4.4', '4.5']?: 4.5
+    Change install type to “Internet”?[Y/n]: n
+    Which version to install [‘4.3’, ‘4.4’, ‘4.5’]?: 4.5
     Add ssh rsa keys to ~/.ssh/known_hosts?[Y/n]: y
     jobid: 2015-07-06-22-28-34672160
-    ansible hosts file successfully writing to disk.....
-    vars_file successfully writing to disk.....
+    ansible hosts file successfully writing to disk…..
+    vars_file successfully writing to disk…..
     # 192.168.0.20 SSH-2.0-OpenSSH_5.3
     # 192.168.0.30 SSH-2.0-OpenSSH_5.3
     # 192.168.0.40 SSH-2.0-OpenSSH_5.3
