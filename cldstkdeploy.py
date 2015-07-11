@@ -120,6 +120,10 @@ class CldStkDeploy(object):
             os.makedirs(savedHome + '/templates/other')
         if not os.path.exists(savedHome + '/templates/iso'):
             os.makedirs(savedHome + '/templates/iso')
+        if not os.path.exists(savedHome + '/public/rpms'):
+            os.makedirs(savedHome + '/public/rpms')
+        if not os.path.exists(savedHome + '/public/rpms/rhel'):
+            os.makedirs(savedHome + '/public/rpms/rhel')
 
     def getpasswd(self):
         self.passwd = getpass.getpass("Enter Password Here: ")
