@@ -4,12 +4,8 @@
 # cloudstack-mgmt_deploy.yaml
 # complete installation of cloudstack-management server
 
-- hosts: cldstk_kvm
+- hosts: nfs_servers
   user: root
 
   roles:
-    - cldstk-kvm
-
-
-
-
+    - cldstk-nfs

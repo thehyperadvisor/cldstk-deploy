@@ -2,8 +2,6 @@
 
 - hosts: cldstk_mgmt
   user: root
-  vars_files:
-    - ../vars_file.yml
 
   tasks:
     - name: configure api integration so we can get the apikey and secretkey for admin
@@ -15,8 +13,6 @@
 
 - hosts: 127.0.0.1
   connection: local
-  vars_files:
-    - ../vars_file.yml
 
   tasks:
     - name: Stop iptables
@@ -28,8 +24,6 @@
 
 - hosts: cldstk_mgmt
   user: root
-  vars_files:
-    - ../vars_file.yml
 
   tasks:
     - name: Disable api integration so we can get the apikey and secretkey for admin

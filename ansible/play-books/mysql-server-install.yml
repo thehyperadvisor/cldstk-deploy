@@ -6,8 +6,6 @@
 
 - hosts: mysql_servers
   user: root
-  vars_files:
-    - ../vars_file.yml
 
   roles:
     - cldstk-mysql

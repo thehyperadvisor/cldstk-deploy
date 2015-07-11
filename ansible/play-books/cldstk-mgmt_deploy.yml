@@ -5,10 +5,8 @@
 # complete installation of cloudstack-management server
 
 - hosts: cldstk_mgmt
-  user: root
+  remote_user: root
   #serial: 1
-  vars_files:
-    - ../vars_file.yml
   roles: 
     - cldstk-mgmt
 
@@ -35,9 +33,7 @@
       action: command chkconfig ntpd on
 
 - hosts: cldstk_web
-  user: root
-  vars_files:
-    - ../vars_file.yml
+  remote_user: root
   roles: 
     - cldstk-mgmt
 

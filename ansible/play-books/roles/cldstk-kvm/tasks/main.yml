@@ -2,9 +2,6 @@
     - name: Stop iptables
       action: service name=iptables state=stopped
 
-    - name: Add Cloudstack Repository
-      copy: src="../resources/cloudstack.repo" dest=/etc/yum.repos.d/cloudstack.repo
-
     - name: Clean yum repositories
       command: yum clean all
 
@@ -39,9 +36,6 @@
       action: command rpm -Uvh --replacepkgs http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
       when: ansible_distribution == 'CentOS'
 
-    #- name: Copy cloudstack-setup-agent.py script to /tmp
-    #  copy: src=cldstk-setup-agent.py dest=/tmp
-
     - name: Install Cloudstack Agent RPMS
       action: yum name={{ item }}
       with_items:
@@ -73,9 +67,6 @@
 
     - name: Start libvirtd service
       action: service name=libvirtd state=restarted enabled=yes
-
-    #- name: Run Cloudstack agent Configuration scripts
-    #  command: python /tmp/cldstk-setup-agent.py
 
     - name: Start cloudstack-agent service
       action: service name=cloudstack-agent state=started enabled=yes

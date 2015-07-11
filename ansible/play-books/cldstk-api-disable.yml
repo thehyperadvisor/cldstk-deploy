@@ -7,8 +7,6 @@
 
 - hosts: db_master
   user: root
-  vars_files:
-    - ../vars_file.yml
 
   tasks:
     - name: Configure API to use null
@@ -16,8 +14,6 @@
 
 - hosts: cldstk_mgmt:cldstk_web
   user: root
-  vars_files:
-    - ../vars_file.yml
 
   tasks:
     - name: Restart the cloudstack-management service

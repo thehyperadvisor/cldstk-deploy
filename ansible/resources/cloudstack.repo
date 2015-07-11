@@ -1,5 +1,0 @@
-[cloudstack]
-name=cloudstack
-baseurl=http://cloudstack.apt-get.eu/rhel/
-enabled=1
-gpgcheck=0

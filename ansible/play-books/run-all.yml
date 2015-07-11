@@ -8,4 +8,5 @@
 - include: cldstk-mgmt_deploy.yml
 - include: mysql-replication-setup.yml
 - include: cldstk-agent_deploy.yml
+- include: cldstk-nfs-server.yml
 - include: cldstk-preseed-kvm-systmpl.yml

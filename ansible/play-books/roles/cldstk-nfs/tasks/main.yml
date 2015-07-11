@@ -1,0 +1,48 @@
+---
+  - name: Install Dependancies
+    action: yum name={{ item }}
+    with_items:
+      - libselinux-python
+
+  - name: install nfs package
+    yum: pkg={{ item }}
+         state=present 
+    with_items:
+      - nfs-utils
+
+  - name: create a directory to share
+    file: path=/opt/nfs/primary
+          mode=0777
+          state=directory
+
+  - name: create a directory to share
+    file: path=/opt/nfs/secondary
+          mode=0777
+          state=directory
+
+  - name: add an export
+    lineinfile: dest=/etc/exports
+                insertafter=EOF
+                state=present
+                line='/opt/nfs {{ansible_eth0.ipv4.network }}/24(rw,sync)'
+
+
+  - name: configure firewall, allow traffic to port 1883
+    service: name=iptables
+            state=stopped
+            enabled=no
+
+  - name: start rpcbind
+    service: name=rpcbind
+            state=running
+            enabled=yes
+
+  - name: start nfs
+    service: name=nfs
+            state=running
+            enabled=yes
+
+  - name: start nfslock
+    service: name=nfslock
+            state=running
+            enabled=yes

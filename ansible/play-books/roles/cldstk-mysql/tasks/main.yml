@@ -54,7 +54,8 @@
                   password={{ mysql_root_password }}
                   priv=*.*:ALL,GRANT
       with_items:
-        - $ansible_hostname
+        - "{{ ansible_hostname }}"
+        - "{{ ansible_default_ipv4.address }}"
         - 127.0.0.1
         - ::1
         - '%'
