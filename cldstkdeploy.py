@@ -124,6 +124,13 @@ class CldStkDeploy(object):
             os.makedirs(savedHome + '/public/rpms')
         if not os.path.exists(savedHome + '/public/rpms/rhel'):
             os.makedirs(savedHome + '/public/rpms/rhel')
+        if not os.path.exists(userHome + '/.ssh'):
+            os.makedirs(userHome + '/.ssh')
+        try:
+            if not os.path.exists(userHome + '/.ssh/known_hosts'):
+                open(userHome + '/.ssh/known_hosts', 'w').close()
+        except:
+            pass
 
     def getpasswd(self):
         self.passwd = getpass.getpass("Enter Password Here: ")
