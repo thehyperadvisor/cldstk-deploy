@@ -116,6 +116,8 @@ class CloudStack(SignedAPICall):
 
 class CldStkDeploy(object):
     def __init__(self):
+        if not os.path.exists(savedHome + '/templates'):
+            os.makedirs(savedHome + '/templates')
         if not os.path.exists(savedHome + '/templates/other'):
             os.makedirs(savedHome + '/templates/other')
         if not os.path.exists(savedHome + '/templates/iso'):
