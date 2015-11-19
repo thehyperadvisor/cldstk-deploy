@@ -45,10 +45,10 @@
       action: service name=ntpd state=stopped
       when: ansible_distribution == 'CentOS'
 
-    - name: Update system time
-      command: ntpdate 0.centos.pool.ntp.org
-      ignore_errors: yes
-      when: ansible_distribution == 'CentOS'
+#    - name: Update system time
+#      command: ntpdate 0.centos.pool.ntp.org
+#      ignore_errors: yes
+#      when: ansible_distribution == 'CentOS'
 
     - name: Start service NTP
       action: service name=ntpd state=started
