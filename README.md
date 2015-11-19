@@ -50,11 +50,11 @@ cldstk-deploy is a utility for making Apache CloudStack and KVM  installations q
 
     `cd cldstk-deploy`
 
-    `python cldstkdeploy.py —setup all`
+    `python cldstkdeploy.py —-setup all`
 
 3. Download the Apache Cloudstack RPMS and Systemtemplates all at once. (OPTIONAL) - if you use “Internet” installation type. 
 
-    `python cldstkdeploy.py —getall 4.5`
+    `python cldstkdeploy.py —-getall 4.5`
 
 4. (OPTIONAL) Build RPMS from source. ONLY 4.3, 4.4 & 4.5 for now. ONLY IF YOU DO NOT DOWNLOAD RPMS.
 
